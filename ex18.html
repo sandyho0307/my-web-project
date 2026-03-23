@@ -2,37 +2,37 @@
 <html>
 <head>
 <style>
-  /* 共同樣式 */
+  /* 共同設定 */
   body {
     font-family: "Times New Roman", Times, serif;
     padding: 80px;
   }
 
-  /* Heading 1：粉色固定，黑色下移 */
+  /* Heading 1：黑字黑線在左上（原點），粉字粉線在右下（偏移） */
   h1 {
     font-size: 64px;
     position: relative;
     display: inline-block;
     color: black;              
-    border-top: 8px solid black; 
+    border-top: 8px solid black; /* 黑線在上方 */
     line-height: 1.1;
     margin: 0 0 100px 0; 
-    z-index: 10;                
-    /* 1. 讓黑字黑線往左移 6px，往「下」移 8px */
-    left: -6px; 
-    top: 8px; 
+    z-index: 10;                 /* 確保黑字黑線在最頂層 */
+    /* 釘死黑字在原點 */
+    left: 0px; 
+    top: 0px; 
   }
 
   h1::after {
     content: "This is heading 1"; 
     position: absolute;
-    /* 2. 關鍵：抵銷父元素的位移，讓粉色層回到原始位置 (0,0) */
-    /* 因為父元素 top: 8px，所以這裡設 -8px 就能把粉色釘回原處 */
+    /* 關鍵位移：粉字單獨往「右」移 6px，往「下」移 6px */
+    /* 這樣黑字就會自然呈現於粉字的「左上方」 */
     left: 6px;   
-    top: -8px;    
+    top: 6px;    
     color: pink;               
-    border-top: 8px solid pink;  
-    z-index: -1;               
+    border-top: 8px solid pink;  /* 粉線在下方 */
+    z-index: -1;                 /* 確保粉字粉線被黑字壓住 */
     width: 100%;
     white-space: nowrap;
   }
@@ -50,7 +50,7 @@
     box-sizing: border-box; 
   }
 
-  /* Heading 3：與 h2 右側對齊 */
+  /* Heading 3：與 h2 對齊 */
   h3 {
     width: 85%;
     text-align: right;      
