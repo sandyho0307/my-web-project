@@ -8,53 +8,49 @@
     padding: 80px;
   }
 
-  /* Heading 1：粉線粉字往下移，線條加粗 */
+  /* Heading 1：黑字主體在「左上」，粉色影子在「右下」 */
   h1 {
     font-size: 64px;
     position: relative;
     display: inline-block;
-    color: black;
-    /* 1. 加粗粉線 */
-    border-top: 8px solid pink; 
+    color: black;              /* 1. 主層設定為黑字 */
+    border-top: 8px solid black; /* 2. 主層設定為黑線 */
     line-height: 1.2;
-    /* 2. 透過 top 讓粉字和粉線整體往下移動 */
-    top: 5px; 
     margin: 0 0 100px 0; 
-    z-index: 2;
+    z-index: 2;                /* 確保黑字在最上面 */
+    /* 黑字維持在原點 (或妳可以微調 left/top) */
+    left: 0px; 
+    top: 0px;
   }
-  
+
   h1::after {
     content: "This is heading 1"; 
     position: absolute;
-    /* 黑字相對位置：維持原位(或稍微偏左上)，達成粉字往下的視覺差 */
-    left: -4px;   
-    top: -12px;    
-    color: pink;
-    z-index: -1; 
-    /* 3. 加粗黑線 */
-    border-top: 8px solid black; 
+    /* 3. 對調位置：粉字往「右」與「下」移，達成黑字在左上的效果 */
+    left: 6px;   
+    top: 6px;    
+    color: pink;               /* 4. 影子設定為粉色 */
+    border-top: 8px solid pink;  /* 5. 影子設定為粉線 */
+    z-index: -1;               /* 確保在黑字下面 */
     width: 100%;
     white-space: nowrap;
   }
 
-  /* Heading 2：立體螢光框使用 outset 效果 */
+  /* Heading 2：立體螢光框 */
   h2 {
     width: 85%;
     font-style: italic;     
     font-size: 42px;
-    padding: 5px 0px 5px 8px; /* 增加左右 padding 確保 g 不重疊 */
+    padding: 5px 0px 5px 8px; 
     line-height: 1.2;
-    margin: 0 0 80px 0; 
-    /* 4. 黑色內框 */
+    margin: 0 0 100px 0;      /* 統一與 h1 同樣的間距 */
     border: 1px solid black; 
-    /* 5. 螢光部分使用 outset 達成老師圖中那種「右下有深色邊」的立體感 */
+    /* 使用 outset 產生老師圖中的立體螢光感 */
     outline: 8px outset yellow; 
     box-sizing: border-box; 
-    /* 清除之前的 shadow 改用純粹的 border 特效 */
-    box-shadow: none;
   }
 
-  /* Heading 3：與 h2 右側對齊 */
+  /* Heading 3：與 h2 對齊 */
   h3 {
     width: 85%;
     text-align: right;      
