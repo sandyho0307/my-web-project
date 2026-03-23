@@ -8,55 +8,60 @@
     padding: 80px;
   }
 
-  /* Heading 1：黑粉交錯，黑在左上、粉在右下 */
+  /* Heading 1：黑線黑字往下移，線條加粗 */
   h1 {
     font-size: 64px;
     position: relative;
     display: inline-block;
     color: black;
-    border-top: 4px solid black; /* 黑線 */
+    /* 1. 加粗黑線 */
+    border-top: 8px solid black; 
     line-height: 1.2;
-    margin: 0 0 80px 0; /* 下方間距固定 80px */
+    /* 2. 透過 top 讓黑字和黑線整體往下移動 */
+    top: 5px; 
+    margin: 0 0 100px 0; 
     z-index: 2;
   }
 
   h1::after {
     content: "This is heading 1"; 
     position: absolute;
-    /* 調整位移：讓黑字維持在左上，粉字往右(left)與下(top)移動 */
-    left: 4px;   
-    top: 4px;    
+    /* 粉字相對位置：維持原位(或稍微偏左上)，達成黑字往下的視覺差 */
+    left: -4px;   
+    top: -12px;    
     color: pink;
     z-index: -1; 
-    border-top: 4px solid pink; /* 粉線 */
+    /* 3. 加粗粉線 */
+    border-top: 8px solid pink; 
     width: 100%;
     white-space: nowrap;
   }
 
-  /* Heading 2：立體螢光框 */
+  /* Heading 2：立體螢光框使用 outset 效果 */
   h2 {
     width: 85%;
     font-style: italic;     
     font-size: 42px;
-    /* 增加垂直 padding (3px)，避免文字 g 被切到 */
-    padding: 3px 0px 3px 5px; 
+    padding: 5px 0px 5px 8px; /* 增加左右 padding 確保 g 不重疊 */
     line-height: 1.2;
-    margin: 0 0 80px 0; /* 下方間距同樣設為 80px */
+    margin: 0 0 80px 0; 
+    /* 4. 黑色內框 */
     border: 1px solid black; 
-    outline: 5px solid yellow; 
-    /* 老師圖中的陰影更像是立體邊框效果，用 inset shadow 模擬內凹感 */
-    box-shadow: 2px 2px 0px #888, inset 1px 1px 0px #000;
+    /* 5. 螢光部分使用 outset 達成老師圖中那種「右下有深色邊」的立體感 */
+    outline: 8px outset yellow; 
     box-sizing: border-box; 
+    /* 清除之前的 shadow 改用純粹的 border 特效 */
+    box-shadow: none;
   }
 
-  /* Heading 3：與 h2 對齊 */
+  /* Heading 3：與 h2 右側對齊 */
   h3 {
     width: 85%;
     text-align: right;      
     font-size: 32px;
     text-decoration: underline;
     text-underline-offset: 5px;
-    margin: 0; /* 靠 h2 的 margin-bottom 推開距離 */
+    margin: 0; 
   }
 </style>
 </head>
