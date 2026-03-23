@@ -4,45 +4,41 @@
 <style>
 /* 共同樣式 */
 p {
-  /* 關鍵：強制包含邊框計算，確保三個長度絕對一致 */
   box-sizing: border-box; 
-  width: 500px;         
-  margin: 40px 20px;    
-  /* 字跟左框再近一點 (padding-left 縮小)，上下維持距離 */
-  padding: 5px 2px;     
+  width: 500px;         /* 三個長度絕對一致 */
+  margin: 40px 25px;    
+  padding: 5px 2px;     /* 字跟左框極近，上下維持距離 */
   line-height: 1.2;     
-  font-size: 32px;      /* 字體調小一點 */
+  font-size: 32px;      
   font-weight: bold;
   text-align: left;     
 }
 
-/* 第一個：內粗外細紅框、藍底 */
+/* 第一個：內粗外細紅框、藍底 (線間保證是藍色) */
 p.double {
   background-color: lightblue;
-  border: 5px solid tomato;    /* 內層粗線 */
-  outline: 2px solid tomato;   /* 外層細線 */
-  /* 縫隙透出底色藍色 */
-  outline-offset: 3px;         
-  /* 補償 outline 位移，確保左邊對齊線一致 */
-  margin-left: 25px;           
+  /* 內層粗線 */
+  border: 5px solid tomato; 
+  /* 關鍵：使用兩層 box-shadow */
+  /* 第一層：3px 的藍色擴張（模擬縫隙） */
+  /* 第二層：再加上 2px 的紅色邊框（模擬外細線） */
+  box-shadow: 0 0 0 3px lightblue, 0 0 0 5px tomato;
+  /* 為了不讓陰影被切掉，增加 margin */
+  margin-bottom: 50px;
 }
 
 /* 第二個：黃底藍圓邊 */
 p.round {
   background-color: yellow;
-  border: ２px solid dodgerblue;
+  /* 修正：將全形數字改回半形數字 2px */
+  border: 2px solid dodgerblue; 
   border-radius: 15px; 
-  /* 為了對齊第一個有 outline 的視覺位置 */
-  margin-left: 25px;
 }
 
 /* 第三個：綠底灰點點 (點點大) */
 p.dot {
   background-color: mediumseagreen;
-  /* 12px 粗邊框產生大點點 */
   border: 12px dotted gray;
-  /* 為了對齊第一個有 outline 的視覺位置 */
-  margin-left: 25px;
 }
 </style>
 </head>
