@@ -2,45 +2,58 @@
 <html>
 <head>
 <style>
-  /* 共同設定：維持圖片中的襯線字體 (Serif) */
+  /* 共同設定 */
   body {
     font-family: "Times New Roman", Times, serif;
-    padding: 20px;
+    padding: 40px;
   }
 
-  /* 第一個：上方有粗線、下方有粉紅色細線的 Heading 1 */
+  /* Heading 1: 黑字在上/左、粉字在下/右，且上方皆有線 */
   h1 {
-    display: inline-block; /* 讓裝飾線寬度隨文字長度 */
     font-size: 48px;
-    margin-bottom: 40px;
-    /* 上方粗黑線，下方粉紅細線 */
-    text-decoration: overline underline;
-    text-decoration-color: black pink; /* 部分瀏覽器支援，若不支援改用 border */
-    /* 為了精準模擬，使用 border-top 做上線 */
-    border-top: 5px solid black;
-    /* 用 text-decoration 做底下的粉紅細線 */
-    text-decoration: underline pink;
-    padding-top: 5px;
+    position: relative;
+    display: inline-block;
+    margin-bottom: 60px;
+    color: black;
+    /* 黑字上方的黑線 */
+    border-top: 2px solid black;
+    line-height: 1.2;
   }
 
-  /* 第二個：斜體、帶有黃色外粗線與黑色內細線的 Heading 2 */
+  /* 利用偽元素製作底層的粉色字與粉色線 */
+  h1::after {
+    content: "This is heading 1"; /* 複製同樣的文字 */
+    position: absolute;
+    left: 4px;   /* 向右偏移，讓黑字顯得在左邊 */
+    top: 4px;    /* 向下偏移，讓黑字顯得在上面 */
+    color: pink;
+    z-index: -1; /* 放在黑字後方 */
+    /* 粉字上方的粉線 */
+    border-top: 2px solid pink;
+    width: 100%;
+    white-space: nowrap;
+  }
+
+  /* Heading 2: 長方形縮短 */
   h2 {
-    width: 90%;             /* 設定寬度 */
-    font-style: italic;     /* 斜體 */
+    width: 70%;             /* 縮短長度 */
+    font-style: italic;     
     font-size: 32px;
-    padding: 5px;
-    margin-bottom: 40px;
-    border: 1px solid black; /* 內層黑色細線 */
-    outline: 4px solid yellow; /* 外層黃色粗線 */
+    padding: 10px;
+    margin-bottom: 10px;    /* 縮短與 h3 的間距 */
+    border: 1px solid black; 
+    outline: 4px solid yellow;
+    box-sizing: border-box; /* 確保寬度包含邊框 */
   }
 
-  /* 第三個：置右、有底線且最後一個字母有加底線的 Heading 3 */
+  /* Heading 3: 與 Heading 2 的右側對齊 */
   h3 {
-    text-align: right;      /* 置右對齊 */
+    width: 70%;             /* 寬度與 h2 一致 */
+    text-align: right;      /* 文字置右，就會剛好對齊 h2 右邊緣 */
     font-size: 24px;
-    /* 使用 text-decoration 的底線 */
     text-decoration: underline;
-    text-underline-offset: 5px; /* 讓底線跟字有一點距離 */
+    text-underline-offset: 3px;
+    margin-top: 20px;       /* 增加一點跟 h2 外框的距離 */
   }
 </style>
 </head>
