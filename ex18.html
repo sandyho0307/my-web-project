@@ -8,17 +8,16 @@
     padding: 80px;
   }
 
-  /* Heading 1：讓基準點固定，透過 ::after 位移產生相對位置 */
+  /* Heading 1：確保黑線黑字絕對在最上層 */
   h1 {
     font-size: 64px;
     position: relative;
     display: inline-block;
     color: black;              
-    border-top: 8px solid black; 
+    border-top: 8px solid black; /* 這是最上面的黑線 */
     line-height: 1.1;
     margin: 0 0 100px 0; 
-    z-index: 2;                
-    /* h1 本身保持原位 (0,0) */
+    z-index: 10;                /* 提高層級，確保壓過粉線 */
     left: 0px; 
     top: 0px;
   }
@@ -26,13 +25,13 @@
   h1::after {
     content: "This is heading 1"; 
     position: absolute;
-    /* 要讓黑字看起來在「左下」，粉字就要往「右」往「上」移 */
-    /* 這裡把粉字往右推 8px，往上移 8px */
+    /* 位移調整：粉字往右移 8px，往下移 8px */
+    /* 這樣黑字就會維持在左上，粉字（粉線）則會在右下 */
     left: 8px;   
-    top: -8px;    
+    top: 8px;    
     color: pink;               
-    border-top: 8px solid pink;  
-    z-index: -1;               
+    border-top: 8px solid pink;  /* 這是被壓在下面的粉線 */
+    z-index: -1;                 /* 關鍵：設為負值，絕對不會蓋過黑線 */
     width: 100%;
     white-space: nowrap;
   }
