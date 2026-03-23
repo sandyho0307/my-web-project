@@ -2,35 +2,41 @@
 <html>
 <head>
 <style>
-/* 共同樣式：設定寬度、字體大小、置左 */
+/* 共同樣式 */
 p {
-  width: 450px;         /* 縮小畫布寬度，讓比例更好看 */
-  margin: 25px 0;      /* 上下留白，左右為 0 確保置左 */
-  padding: 10px 20px;  /* 上下 10px，左右 20px 讓文字離邊框有一點點距離 */
-  font-size: 36px;     /* 字體放大 */
-  font-weight: bold;   /* 粗體 */
-  text-align: left;    /* 關鍵：文字置左 */
-  /* 維持瀏覽器預設字體 */
+  width: 450px;
+  margin: 20px 10px;
+  /* 關鍵：縮小內距，讓文字貼近邊框 */
+  padding: 2px 8px;    /* 上下只有 2px，左右 8px 稍微留一點點呼吸空間 */
+  font-size: 42px;     /* 字體再放大一點，視覺上會顯得框更擠 */
+  font-weight: bold;
+  text-align: left;    
 }
 
-/* 第一個：紅框藍底 (雙線中間會透出藍色底色) */
+/* 第一個：內粗外細紅框、藍底 (緊湊版) */
 p.double {
   background-color: lightblue;
-  /* 10px 的雙線框，中間的縫隙會自動填入背景色 lightblue */
-  border: 10px double tomato; 
+  /* 內層粗線 */
+  border: 4px solid tomato; 
+  /* 外層細線 */
+  outline: 2px solid tomato;
+  /* 縮短兩條紅線之間的間距，讓它更精緻 */
+  outline-offset: 2px; 
+  /* 補償 outline 不佔空間的特性 */
+  margin-top: 30px;
 }
-  
-/* 第二個：黃底、藍色圓邊框 */
+
+/* 第二個：黃底藍圓邊 (緊湊版) */
 p.round {
   background-color: yellow;
-  border: 5px solid dodgerblue; 
-  border-radius: 50px; /* 膠囊狀圓角 */
+  border: 3px solid dodgerblue;
+  border-radius: 12px; /* 稍微減小圓角，讓它跟文字更貼合 */
 }
-  
-/* 第三個：綠底、灰色點點框 */
+
+/* 第三個：綠底灰點點 (緊湊版) */
 p.dot {
   background-color: mediumseagreen;
-  border: 8px dotted gray; 
+  border: 8px dotted gray;
 }
 </style>
 </head>
