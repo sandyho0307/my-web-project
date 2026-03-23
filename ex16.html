@@ -12,11 +12,17 @@ p {
   /* 不設定 font-family，就會維持妳原本程式碼的預設字體 */
 }
 
-/* 第一個：淺藍底、紅色雙線框 */
+/* 第一個：內粗外細、紅框藍底 */
 p.double {
   background-color: lightblue;
-  /* 增加寬度到 10px，雙線的效果會更明顯，且內層視覺上會比較紮實 */
-  border: 10px double tomato; 
+  /* 用 border 當作裡面那條「粗線」 */
+  border: 3px solid tomato; 
+  /* 用 outline 當作外面那條「細線」 */
+  outline: 2px solid tomato;
+  /* 關鍵：用 outline-offset 讓內外線之間產生白色的間隙 */
+  outline-offset: 2px;
+  /* 為了不讓外線貼到邊界，稍微給一點外距 */
+  margin-left: 5px; 
 }
   
 /* 第二個：黃底、藍色圓邊框 */
