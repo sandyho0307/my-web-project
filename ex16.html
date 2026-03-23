@@ -4,30 +4,27 @@
 <style>
 /* 共同樣式：設定寬度、字體大小、置左 */
 p {
-  width: 600px;         /* 縮小畫布寬度 */
-  margin: 20px 0;      /* 上下間隔 20px，左右為 0 即可置左 */
-  padding: 5px;       /* 增加內距，讓字大一點時不會太擠 */
-  font-size: 32px;     /* 字體放大（可視需求調整大小） */
-  font-weight: bold;   /* 粗體 */
-  /* 不設定 font-family，就會維持妳原本程式碼的預設字體 */
+  width: 450px;         /* 調整寬度比例 */
+  margin: 25px 0;      /* 置左：左右不設定 auto */
+  font-size: 38px;     /* 字體放大 */
+  font-weight: bold;   
+  text-align: center;  /* 文字在框內置中 */
+  padding: 15px;       /* 增加內距，讓底色更明顯 */
 }
 
-/* 第一個：內粗外細、紅框藍底 */
+/* 第一個：紅框藍底 (藍色填滿雙線中間) */
 p.double {
   background-color: lightblue;
-  /* 用 border 當作裡面那條「粗線」 */
-  border: 4px solid tomato; 
-  /* 用 outline 當作外面那條「細線」 */
-  outline: 2px solid tomato;
-  /* 為了不讓外線貼到邊界，稍微給一點外距 */
-  margin-left: 5px; 
+  /* border 設為 10px，double 會自動分配內外線與中間空隙 */
+  /* 在大多數瀏覽器中，這 10px 的中間會自動填入 background-color */
+  border: 10px double tomato; 
 }
   
 /* 第二個：黃底、藍色圓邊框 */
 p.round {
   background-color: yellow;
-  border: 4px solid dodgerblue; 
-  border-radius: 20px; 
+  border: 5px solid dodgerblue; 
+  border-radius: 50px; /* 膠囊狀圓角 */
 }
   
 /* 第三個：綠底、灰色點點框 */
