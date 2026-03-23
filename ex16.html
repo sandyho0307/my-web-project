@@ -16,9 +16,11 @@ p {
 p.double {
   background-color: lightblue;
   /* 用 border 當作裡面那條「粗線」 */
-  border: 3px solid tomato; 
+  border: 4px solid tomato; 
   /* 用 outline 當作外面那條「細線」 */
   outline: 2px solid tomato;
+  /* 為了不讓外線貼到邊界，稍微給一點外距 */
+  margin-left: 5px; 
 }
   
 /* 第二個：黃底、藍色圓邊框 */
