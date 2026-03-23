@@ -5,7 +5,7 @@
 /* 共同樣式：設定寬度、字體大小、置左 */
 p {
   width: 600px;         /* 縮小畫布寬度 */
-  margin: 20px 0;      /* 上下間隔 20px，左右為 0 即可置左 */
+  margin: 5px 0;      /* 上下間隔 20px，左右為 0 即可置左 */
   padding: 10px;       /* 增加內距，讓字大一點時不會太擠 */
   font-size: 32px;     /* 字體放大（可視需求調整大小） */
   font-weight: bold;   /* 粗體 */
@@ -19,10 +19,6 @@ p.double {
   border: 3px solid tomato; 
   /* 用 outline 當作外面那條「細線」 */
   outline: 2px solid tomato;
-  /* 關鍵：用 outline-offset 讓內外線之間產生白色的間隙 */
-  outline-offset: 2px;
-  /* 為了不讓外線貼到邊界，稍微給一點外距 */
-  margin-left: 5px; 
 }
   
 /* 第二個：黃底、藍色圓邊框 */
