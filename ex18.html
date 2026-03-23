@@ -8,6 +8,21 @@
     padding: 80px;
   }
 
+  /* Heading 1：粉線粉字往下移，線條加粗 */
+  h1 {
+    font-size: 64px;
+    position: relative;
+    display: inline-block;
+    color: pink;
+    /* 1. 加粗粉線 */
+    border-top: 8px solid pink; 
+    line-height: 1.2;
+    /* 2. 透過 top 讓粉字和粉線整體往下移動 */
+    top: 5px; 
+    margin: 0 0 100px 0; 
+    z-index: 2;
+  }
+  
   h1::after {
     content: "This is heading 1"; 
     position: absolute;
@@ -16,25 +31,10 @@
     top: -12px;    
     color: black;
     z-index: -1; 
-    /* 3. 加粗粉線 */
-    border-top: 8px solid pink; 
+    /* 3. 加粗黑線 */
+    border-top: 8px solid black; 
     width: 100%;
     white-space: nowrap;
-  }
-
-  /* Heading 1：粉線粉字往下移，線條加粗 */
-  h1 {
-    font-size: 64px;
-    position: relative;
-    display: inline-block;
-    color: pink;
-    /* 1. 加粗黑線 */
-    border-top: 8px solid black; 
-    line-height: 1.2;
-    /* 2. 透過 top 讓粉字和粉線整體往下移動 */
-    top: 5px; 
-    margin: 0 0 100px 0; 
-    z-index: 2;
   }
 
   /* Heading 2：立體螢光框使用 outset 效果 */
