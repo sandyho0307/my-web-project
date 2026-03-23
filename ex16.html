@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+/* 第一個：淺藍底、紅色雙線框 */
+p.double {
+  background-color: lightblue;
+  border: 5px double tomato; /* double 代表雙線，tomato 接近圖中的橘紅色 */
+  padding: 10px;
+  font-weight: bold;
+}
+  
+/* 第二個：黃底、藍色圓邊框 */
+p.round {
+  background-color: yellow;
+  border: 2px solid dodgerblue; /* solid 代表實線 */
+  border-radius: 15px; /* 增加圓角弧度 */
+  padding: 10px;
+  font-weight: bold;
+}
+  
+/* 第三個：綠底、灰色點點框 */
+p.dot {
+  background-color: mediumseagreen;
+  border: 5px dotted gray; /* dotted 代表點點線 */
+  padding: 10px;
+  font-weight: bold;
+}
+</style>
+</head>
+<body>
+
+<p class="double">Hello World</p>
+<p class="round">Hello World</p>
+<p class="dot">Hello World</p>
+
+</body>
+</html>
