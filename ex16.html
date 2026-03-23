@@ -4,14 +4,14 @@
 <style>
 /* 共同樣式 */
 p {
-  width: 550px;         /* 三個長方形長度加長 */
-  margin: 30px 15px;    /* 置左並拉開間距 */
-  /* 極致靠近：padding 設為 0，並用 line-height 控制高度（寬度縮短感） */
+  width: 550px;         /* 統一加長三個長方形的長度 */
+  margin: 30px 20px;    /* 增加邊距避免 outline 被切掉 */
+  /* 極致靠近：padding 歸零，靠 line-height 壓低高度 */
   padding: 0px 5px;     
-  line-height: 1.1;     /* 縮短長方形的垂直寬度 */
+  line-height: 1;       /* 讓字框與字體幾乎重合 */
   font-size: 45px;      
   font-weight: bold;
-  text-align: left;    
+  text-align: left;     
 }
 
 /* 第一個：內粗外細紅框、藍底 */
@@ -19,24 +19,23 @@ p.double {
   background-color: lightblue;
   border: 5px solid tomato;    /* 內層粗線 */
   outline: 2px solid tomato;   /* 外層細線 */
-  outline-offset: 3px;         /* 這裡的縫隙會透出底下的 lightblue */
-  /* 因為有 outline，增加外距避免重疊 */
-  margin-top: 40px;
-  margin-left: 20px; 
+  /* 兩條紅線之間的縫隙會自動透出底下的 lightblue */
+  outline-offset: 3px;         
+  margin-top: 40px;            /* 補償 outline 空間 */
 }
 
-/* 第二個：黃底藍圓邊，比其他兩個短 */
+/* 第二個：黃底藍圓邊 (長度已與其他一致) */
 p.round {
-  width: 400px;                /* 特別縮短長度 */
   background-color: yellow;
   border: 4px solid dodgerblue;
-  border-radius: 15px; 
+  border-radius: 12px; 
 }
 
-/* 第三個：綠底灰點點 */
+/* 第三個：綠底灰點點 (點點加大) */
 p.dot {
   background-color: mediumseagreen;
-  border: 6px dotted gray;
+  /* 增加 border 寬度會讓 dotted 的點點變大 */
+  border: 12px dotted gray;
 }
 </style>
 </head>
