@@ -8,6 +8,20 @@
     padding: 80px;
   }
 
+  h1::after {
+    content: "This is heading 1"; 
+    position: absolute;
+    /* 黑字相對位置：維持原位(或稍微偏左上)，達成粉字往下的視覺差 */
+    left: -4px;   
+    top: -12px;    
+    color: black;
+    z-index: -1; 
+    /* 3. 加粗黑線 */
+    border-top: 8px solid black; 
+    width: 100%;
+    white-space: nowrap;
+  }
+
   /* Heading 1：粉線粉字往下移，線條加粗 */
   h1 {
     font-size: 64px;
@@ -21,20 +35,6 @@
     top: 5px; 
     margin: 0 0 100px 0; 
     z-index: 2;
-  }
-
-  h1::after {
-    content: "This is heading 1"; 
-    position: absolute;
-    /* 黑字相對位置：維持原位(或稍微偏左上)，達成粉字往下的視覺差 */
-    left: -4px;   
-    top: -12px;    
-    color: black;
-    z-index: -1; 
-    /* 3. 加粗黑線 */
-    border-top: 8px solid black; 
-    width: 100%;
-    white-space: nowrap;
   }
 
   /* Heading 2：立體螢光框使用 outset 效果 */
