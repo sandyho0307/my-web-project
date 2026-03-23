@@ -5,55 +5,59 @@
   /* 共同設定 */
   body {
     font-family: "Times New Roman", Times, serif;
-    padding: 40px;
+    padding: 60px; /* 增加邊距避免外框被切到 */
   }
 
-  /* Heading 1: 黑字在上/左、粉字在下/右，且上方皆有線 */
+  /* Heading 1: 黑粉重疊，線條加粗且更靠近 */
   h1 {
-    font-size: 48px;
+    font-size: 64px;       /* 字體再大一點 */
     position: relative;
     display: inline-block;
-    margin-bottom: 60px;
+    margin-bottom: 80px;
     color: black;
-    /* 黑字上方的黑線 */
-    border-top: 2px solid black;
-    line-height: 1.2;
+    /* 黑字上方的黑線加粗 */
+    border-top: 5px solid black;
+    line-height: 1.1;
+    z-index: 1;
   }
 
   /* 利用偽元素製作底層的粉色字與粉色線 */
   h1::after {
-    content: "This is heading 1"; /* 複製同樣的文字 */
+    content: "This is heading 1"; 
     position: absolute;
-    left: 4px;   /* 向右偏移，讓黑字顯得在左邊 */
-    top: 4px;    /* 向下偏移，讓黑字顯得在上面 */
+    /* 縮小偏移量，讓兩者更靠近 */
+    left: 2px;   
+    top: 2px;    
     color: pink;
-    z-index: -1; /* 放在黑字後方 */
-    /* 粉字上方的粉線 */
-    border-top: 2px solid pink;
+    z-index: -1; 
+    /* 粉字上方的粉線加粗 */
+    border-top: 5px solid pink;
     width: 100%;
     white-space: nowrap;
   }
 
-  /* Heading 2: 長方形縮短 */
+  /* Heading 2: 字跟長方形上下左極近 */
   h2 {
-    width: 70%;             /* 縮短長度 */
+    width: 70%;             
     font-style: italic;     
-    font-size: 32px;
-    padding: 10px;
-    margin-bottom: 10px;    /* 縮短與 h3 的間距 */
+    font-size: 42px;        /* 字體放大 */
+    /* 縮小上下左間距 */
+    padding: 0px 0px 0px 2px; 
+    line-height: 1;         /* 緊縮上下高度 */
+    margin-bottom: 10px;    
     border: 1px solid black; 
-    outline: 4px solid yellow;
-    box-sizing: border-box; /* 確保寬度包含邊框 */
+    outline: 5px solid yellow; /* 黃色外框也稍微加粗 */
+    box-sizing: border-box; 
   }
 
-  /* Heading 3: 與 Heading 2 的右側對齊 */
+  /* Heading 3: 維持與 h2 對齊 */
   h3 {
-    width: 70%;             /* 寬度與 h2 一致 */
-    text-align: right;      /* 文字置右，就會剛好對齊 h2 右邊緣 */
-    font-size: 24px;
+    width: 70%;             
+    text-align: right;      
+    font-size: 32px;        /* 字體放大 */
     text-decoration: underline;
-    text-underline-offset: 3px;
-    margin-top: 20px;       /* 增加一點跟 h2 外框的距離 */
+    text-underline-offset: 4px;
+    margin-top: 30px;       
   }
 </style>
 </head>
