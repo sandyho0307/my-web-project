@@ -8,7 +8,7 @@
     padding: 80px;
   }
 
-  /* Heading 1：黑字黑線再往左(負值)、往下一點(正值) */
+  /* Heading 1：黑字黑線再往左(負值更大)、往下一點 */
   h1 {
     font-size: 64px;
     position: relative;
@@ -18,15 +18,15 @@
     line-height: 1.1;
     margin: 0 0 100px 0; 
     z-index: 2;                
-    /* 關鍵位移：往左偏移 2px，往下偏移 2px */
-    left: -2px; 
+    /* 修正位移：往左偏移 5px (更明顯)，往下偏移 2px */
+    left: -5px; 
     top: 2px;
   }
 
   h1::after {
     content: "This is heading 1"; 
     position: absolute;
-    /* 粉色影子固定在原點，黑字的位移會產生相對層次感 */
+    /* 粉色影子固定在原點位置 */
     left: 0px;   
     top: 0px;    
     color: pink;               
@@ -36,7 +36,7 @@
     white-space: nowrap;
   }
 
-  /* Heading 2：立體螢光框 */
+  /* Heading 2：維持立體螢光框 */
   h2 {
     width: 85%;
     font-style: italic;     
@@ -49,7 +49,7 @@
     box-sizing: border-box; 
   }
 
-  /* Heading 3：與 h2 右邊對齊 */
+  /* Heading 3：與 h2 右側對齊 */
   h3 {
     width: 85%;
     text-align: right;      
