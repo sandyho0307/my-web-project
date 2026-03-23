@@ -4,19 +4,19 @@
 <style>
 /* 共同樣式：設定寬度、字體大小、置左 */
 p {
-  width: 450px;         /* 調整寬度比例 */
-  margin: 25px 0;      /* 置左：左右不設定 auto */
-  font-size: 38px;     /* 字體放大 */
-  font-weight: bold;   
-  text-align: center;  /* 文字在框內置中 */
-  padding: 15px;       /* 增加內距，讓底色更明顯 */
+  width: 450px;         /* 縮小畫布寬度，讓比例更好看 */
+  margin: 25px 0;      /* 上下留白，左右為 0 確保置左 */
+  padding: 10px 20px;  /* 上下 10px，左右 20px 讓文字離邊框有一點點距離 */
+  font-size: 36px;     /* 字體放大 */
+  font-weight: bold;   /* 粗體 */
+  text-align: left;    /* 關鍵：文字置左 */
+  /* 維持瀏覽器預設字體 */
 }
 
-/* 第一個：紅框藍底 (藍色填滿雙線中間) */
+/* 第一個：紅框藍底 (雙線中間會透出藍色底色) */
 p.double {
   background-color: lightblue;
-  /* border 設為 10px，double 會自動分配內外線與中間空隙 */
-  /* 在大多數瀏覽器中，這 10px 的中間會自動填入 background-color */
+  /* 10px 的雙線框，中間的縫隙會自動填入背景色 lightblue */
   border: 10px double tomato; 
 }
   
