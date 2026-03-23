@@ -8,26 +8,27 @@
     padding: 80px;
   }
 
-  /* Heading 1：黑粉極度靠近，重疊感更強 */
+  /* Heading 1：黑字黑線再往左(負值)、往下一點(正值) */
   h1 {
     font-size: 64px;
     position: relative;
     display: inline-block;
     color: black;              
     border-top: 8px solid black; 
-    line-height: 1.1;          /* 縮小行高，讓黑線與字更緊湊 */
+    line-height: 1.1;
     margin: 0 0 100px 0; 
     z-index: 2;                
-    left: 0px; 
-    top: 0px;
+    /* 關鍵位移：往左偏移 2px，往下偏移 2px */
+    left: -2px; 
+    top: 2px;
   }
 
   h1::after {
     content: "This is heading 1"; 
     position: absolute;
-    /* 關鍵修正：將位移縮小至 2px，達成範例中那種重合的層次感 */
-    left: 2px;   
-    top: 2px;    
+    /* 粉色影子固定在原點，黑字的位移會產生相對層次感 */
+    left: 0px;   
+    top: 0px;    
     color: pink;               
     border-top: 8px solid pink;  
     z-index: -1;               
@@ -35,7 +36,7 @@
     white-space: nowrap;
   }
 
-  /* Heading 2：維持立體螢光框 */
+  /* Heading 2：立體螢光框 */
   h2 {
     width: 85%;
     font-style: italic;     
@@ -44,12 +45,11 @@
     line-height: 1.2;
     margin: 0 0 100px 0;      
     border: 1px solid black; 
-    /* outset 在黃色背景下會產生自然的右下深色邊緣 */
     outline: 8px outset yellow; 
     box-sizing: border-box; 
   }
 
-  /* Heading 3：與 h2 對齊 */
+  /* Heading 3：與 h2 右邊對齊 */
   h3 {
     width: 85%;
     text-align: right;      
