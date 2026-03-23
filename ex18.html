@@ -8,7 +8,7 @@
     padding: 80px;
   }
 
-  /* Heading 1：讓黑線/黑字往下壓，與粉色層靠近 */
+  /* Heading 1：黑粉交錯感修正 */
   h1 {
     font-size: 64px;
     position: relative;
@@ -18,20 +18,21 @@
     line-height: 1.1;
     margin: 0 0 100px 0; 
     z-index: 10;                
-    /* 關鍵：調整這裡的 top 數值，讓黑線往下壓 */
-    left: -2px; 
+    /* 關鍵交錯位移：往左偏移 8px，往下偏移 3px */
+    /* 這樣粉色會從右邊和上面露出來，形成完美的交錯 */
+    left: -8px; 
     top: 3px; 
   }
 
   h1::after {
     content: "This is heading 1"; 
     position: absolute;
-    /* 影子固定位置 */
+    /* 粉色影子固定在原位基準點 */
     left: 0px;   
     top: 0px;    
     color: pink;               
     border-top: 8px solid pink;  
-    z-index: -1;                 
+    z-index: -5;                 /* 確保絕對壓在黑線下面 */
     width: 100%;
     white-space: nowrap;
   }
@@ -49,7 +50,7 @@
     box-sizing: border-box; 
   }
 
-  /* Heading 3：與 h2 右側對齊 */
+  /* Heading 3：與 h2 對齊 */
   h3 {
     width: 85%;
     text-align: right;      
