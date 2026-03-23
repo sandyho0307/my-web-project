@@ -5,64 +5,58 @@
   /* 共同設定 */
   body {
     font-family: "Times New Roman", Times, serif;
-    padding: 80px; /* 增加邊距避免陰影與外框被切到 */
+    padding: 80px;
   }
 
-  /* Heading 1: 黑字左偏、粉字上移 */
+  /* Heading 1：黑粉交錯，黑在左上、粉在右下 */
   h1 {
     font-size: 64px;
     position: relative;
     display: inline-block;
-    /* 設定與 h2 的間距 */
-    margin-bottom: 100px; 
     color: black;
-    border-top: 5px solid black;
-    line-height: 1.1;
-    z-index: 1;
-    /* 讓黑字往左位移 */
-    left: -2px; 
+    border-top: 4px solid black; /* 黑線 */
+    line-height: 1.2;
+    margin: 0 0 80px 0; /* 下方間距固定 80px */
+    z-index: 2;
   }
 
   h1::after {
     content: "This is heading 1"; 
     position: absolute;
-    left: 2px;   /* 相對於黑字向右，抵銷黑字的 left: -2px */
-    /* 粉字往上位移 */
-    top: -5px;    
+    /* 調整位移：讓黑字維持在左上，粉字往右(left)與下(top)移動 */
+    left: 4px;   
+    top: 4px;    
     color: pink;
     z-index: -1; 
-    border-top: 5px solid pink;
+    border-top: 4px solid pink; /* 粉線 */
     width: 100%;
     white-space: nowrap;
   }
 
-  /* Heading 2: 長方形螢光部分加陰影 */
+  /* Heading 2：立體螢光框 */
   h2 {
-    width: 85%;             /* 寬度再加大一點 */
+    width: 85%;
     font-style: italic;     
     font-size: 42px;
-    padding: 0px 0px 0px 2px; 
-    line-height: 1;
-    /* 統一間距：設定與 h3 的間距，需考慮 h3 的 margin-top */
-    margin-bottom: 70px;    
+    /* 增加垂直 padding (3px)，避免文字 g 被切到 */
+    padding: 3px 0px 3px 5px; 
+    line-height: 1.2;
+    margin: 0 0 80px 0; /* 下方間距同樣設為 80px */
     border: 1px solid black; 
-    /* 黃色螢光外框 */
     outline: 5px solid yellow; 
-    /* 針對螢光部分（outline 位置）增加右邊與下方的陰影 */
-    /* 5px 5px 代表向右與向下偏移，灰色半透明 */
-    box-shadow: 8px 8px 0px rgba(0,0,0,0.2); 
+    /* 老師圖中的陰影更像是立體邊框效果，用 inset shadow 模擬內凹感 */
+    box-shadow: 2px 2px 0px #888, inset 1px 1px 0px #000;
     box-sizing: border-box; 
   }
 
-  /* Heading 3: 與 h2 對齊並統一間距 */
+  /* Heading 3：與 h2 對齊 */
   h3 {
-    width: 85%;             /* 寬度與 h2 保持一致 */
+    width: 85%;
     text-align: right;      
     font-size: 32px;
     text-decoration: underline;
-    text-underline-offset: 4px;
-    /* 調整 margin-top 讓 h2-h3 間距與 h1-h2 一致 */
-    margin-top: 30px;       
+    text-underline-offset: 5px;
+    margin: 0; /* 靠 h2 的 margin-bottom 推開距離 */
   }
 </style>
 </head>
