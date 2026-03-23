@@ -5,58 +5,63 @@
   /* 共同設定 */
   body {
     font-family: "Times New Roman", Times, serif;
-    padding: 60px; /* 增加邊距避免外框被切到 */
+    padding: 80px; /* 增加邊距避免陰影與外框被切到 */
   }
 
-  /* Heading 1: 黑粉重疊，線條加粗且更靠近 */
+  /* Heading 1: 黑字左偏、粉字上移 */
   h1 {
-    font-size: 64px;       /* 字體再大一點 */
+    font-size: 64px;
     position: relative;
     display: inline-block;
-    margin-bottom: 80px;
+    /* 設定與 h2 的間距 */
+    margin-bottom: 100px; 
     color: black;
-    /* 黑字上方的黑線加粗 */
     border-top: 5px solid black;
     line-height: 1.1;
     z-index: 1;
+    /* 讓黑字往左位移 */
+    left: -2px; 
   }
 
-  /* 利用偽元素製作底層的粉色字與粉色線 */
   h1::after {
     content: "This is heading 1"; 
     position: absolute;
-    /* 縮小偏移量，讓兩者更靠近 */
-    left: 2px;   
-    top: 2px;    
+    left: 2px;   /* 相對於黑字向右，抵銷黑字的 left: -2px */
+    /* 粉字往上位移 */
+    top: -5px;    
     color: pink;
     z-index: -1; 
-    /* 粉字上方的粉線加粗 */
     border-top: 5px solid pink;
     width: 100%;
     white-space: nowrap;
   }
 
-  /* Heading 2: 字跟長方形上下左極近 */
+  /* Heading 2: 長方形螢光部分加陰影 */
   h2 {
-    width: 70%;             
+    width: 85%;             /* 寬度再加大一點 */
     font-style: italic;     
-    font-size: 42px;        /* 字體放大 */
-    /* 縮小上下左間距 */
+    font-size: 42px;
     padding: 0px 0px 0px 2px; 
-    line-height: 1;         /* 緊縮上下高度 */
-    margin-bottom: 10px;    
+    line-height: 1;
+    /* 統一間距：設定與 h3 的間距，需考慮 h3 的 margin-top */
+    margin-bottom: 70px;    
     border: 1px solid black; 
-    outline: 5px solid yellow; /* 黃色外框也稍微加粗 */
+    /* 黃色螢光外框 */
+    outline: 5px solid yellow; 
+    /* 針對螢光部分（outline 位置）增加右邊與下方的陰影 */
+    /* 5px 5px 代表向右與向下偏移，灰色半透明 */
+    box-shadow: 8px 8px 0px rgba(0,0,0,0.2); 
     box-sizing: border-box; 
   }
 
-  /* Heading 3: 維持與 h2 對齊 */
+  /* Heading 3: 與 h2 對齊並統一間距 */
   h3 {
-    width: 70%;             
+    width: 85%;             /* 寬度與 h2 保持一致 */
     text-align: right;      
-    font-size: 32px;        /* 字體放大 */
+    font-size: 32px;
     text-decoration: underline;
     text-underline-offset: 4px;
+    /* 調整 margin-top 讓 h2-h3 間距與 h1-h2 一致 */
     margin-top: 30px;       
   }
 </style>
