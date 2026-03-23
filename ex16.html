@@ -21,7 +21,7 @@ p.double {
   border: 5px solid tomato; 
   /* 關鍵：使用兩層 box-shadow */
   /* 第一層：3px 的藍色擴張（模擬縫隙） */
-  /* 第二層：再加上 2px 的紅色邊框（模擬外細線） */
+  /* 第二層：再加上 3px 的紅色邊框（模擬外細線） */
   box-shadow: 0 0 0 3px lightblue, 0 0 0 5px tomato;
   /* 為了不讓陰影被切掉，增加 margin */
   margin-bottom: 50px;
@@ -31,7 +31,7 @@ p.double {
 p.round {
   background-color: yellow;
   /* 修正：將全形數字改回半形數字 2px */
-  border: 2px solid dodgerblue; 
+  border: 2.5px solid dodgerblue; 
   border-radius: 15px; 
 }
 
