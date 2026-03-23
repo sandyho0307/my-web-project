@@ -8,30 +8,30 @@
     padding: 80px;
   }
 
-  /* Heading 1：確保黑線黑字絕對在最上層 */
+  /* Heading 1：讓黑線/黑字往下壓，與粉色層靠近 */
   h1 {
     font-size: 64px;
     position: relative;
     display: inline-block;
     color: black;              
-    border-top: 8px solid black; /* 這是最上面的黑線 */
+    border-top: 8px solid black; 
     line-height: 1.1;
     margin: 0 0 100px 0; 
-    z-index: 10;                /* 提高層級，確保壓過粉線 */
-    left: 0px; 
-    top: 0px;
+    z-index: 10;                
+    /* 關鍵：調整這裡的 top 數值，讓黑線往下壓 */
+    left: -2px; 
+    top: 3px; 
   }
 
   h1::after {
     content: "This is heading 1"; 
     position: absolute;
-    /* 位移調整：粉字往右移 8px，往下移 8px */
-    /* 這樣黑字就會維持在左上，粉字（粉線）則會在右下 */
-    left: 8px;   
-    top: 8px;    
+    /* 影子固定位置 */
+    left: 0px;   
+    top: 0px;    
     color: pink;               
-    border-top: 8px solid pink;  /* 這是被壓在下面的粉線 */
-    z-index: -1;                 /* 關鍵：設為負值，絕對不會蓋過黑線 */
+    border-top: 8px solid pink;  
+    z-index: -1;                 
     width: 100%;
     white-space: nowrap;
   }
