@@ -8,7 +8,7 @@
     padding: 80px;
   }
 
-  /* Heading 1：黑字黑線再往左(負值更大)、往下一點 */
+  /* Heading 1：讓基準點固定，透過 ::after 位移產生相對位置 */
   h1 {
     font-size: 64px;
     position: relative;
@@ -18,17 +18,18 @@
     line-height: 1.1;
     margin: 0 0 100px 0; 
     z-index: 2;                
-    /* 修正位移：往左偏移 10px (更明顯)，往下偏移 4px */
-    left: -10px; 
-    top: 4px;
+    /* h1 本身保持原位 (0,0) */
+    left: 0px; 
+    top: 0px;
   }
 
   h1::after {
     content: "This is heading 1"; 
     position: absolute;
-    /* 粉色影子固定在原點位置 */
-    left: 0px;   
-    top: 0px;    
+    /* 要讓黑字看起來在「左下」，粉字就要往「右」往「上」移 */
+    /* 這裡把粉字往右推 8px，往上移 8px */
+    left: 8px;   
+    top: -8px;    
     color: pink;               
     border-top: 8px solid pink;  
     z-index: -1;               
@@ -36,7 +37,7 @@
     white-space: nowrap;
   }
 
-  /* Heading 2：維持立體螢光框 */
+  /* Heading 2：立體螢光框 */
   h2 {
     width: 85%;
     font-style: italic;     
