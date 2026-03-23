@@ -8,31 +8,31 @@
     padding: 80px;
   }
 
-  /* Heading 1：黑粉交錯感修正 */
+  /* Heading 1：黑字黑線在左上（原點），粉字粉線在右下（偏移） */
   h1 {
     font-size: 64px;
     position: relative;
     display: inline-block;
     color: black;              
-    border-top: 8px solid black; 
+    border-top: 8px solid black; /* 黑線在上方 */
     line-height: 1.1;
     margin: 0 0 100px 0; 
-    z-index: 10;                
-    /* 關鍵交錯位移：往左偏移 8px，往下偏移 3px */
-    /* 這樣粉色會從右邊和上面露出來，形成完美的交錯 */
-    left: -8px; 
-    top: 3px; 
+    z-index: 10;                 /* 確保黑字黑線在最頂層 */
+    /* 釘死黑字在原點 */
+    left: 0px; 
+    top: 0px; 
   }
 
   h1::after {
     content: "This is heading 1"; 
     position: absolute;
-    /* 粉色影子固定在原位基準點 */
-    left: 0px;   
-    top: 0px;    
+    /* 關鍵位移：粉字單獨往「右」移 6px，往「下」移 6px */
+    /* 這樣黑字就會自然呈現於粉字的「左上方」 */
+    left: 6px;   
+    top: 6px;    
     color: pink;               
-    border-top: 8px solid pink;  
-    z-index: -5;                 /* 確保絕對壓在黑線下面 */
+    border-top: 8px solid pink;  /* 粉線在下方 */
+    z-index: -1;                 /* 確保粉字粉線被黑字壓住 */
     width: 100%;
     white-space: nowrap;
   }
