@@ -2,14 +2,14 @@
 <html>
 <head>
 <style>
-  /* 畫布控制：限制內容的最大寬度，並置中 */
-  .container {
-    max-width: 600px; /* 限制寬度，解決「畫布太大」的問題 */
-    margin: 0 auto;   /* 置中對齊 */
-    padding-top: 20px;
+  /* 1. Create a wrapper to control the width */
+  .wrapper {
+    position: relative; /* Essential: This makes the div 'fixed' relative to this box */
+    max-width: 500px;   /* Shrink this number to make the whole layout narrower */
+    margin: 50px auto;  /* Centers the whole layout */
   }
 
-  /* 表格設定 */
+  /* Table styling */
   table {
     border-collapse: collapse;
     width: 300px;
@@ -22,16 +22,14 @@
     background-color: gray;
     color: white;
   }
-  
-  /* 表格資料行顏色 */
   tbody tr:nth-child(odd) { background-color: yellow; }
   tbody tr:nth-child(even) { background-color: white; }
 
-  /* 右上角固定區塊設定 */
+  /* 2. Position the div relative to the wrapper */
   .fixed-div {
-    position: fixed;
-    top: 20px;
-    right: 20px;
+    position: absolute; /* It acts like 'fixed' but pinned to the wrapper */
+    top: 0;             /* Aligned to the top of the wrapper */
+    right: 0;           /* Aligned to the right of the wrapper */
     border: 2px solid green;
     padding: 15px;
     width: 150px;
@@ -40,7 +38,8 @@
 </head>
 <body>
 
-  <div class="container">
+  <div class="wrapper">
+    
     <table>
       <thead>
         <tr>
@@ -49,26 +48,18 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>1</td>
-          <td>1</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>2</td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td>3</td>
-        </tr>
+        <tr><td>1</td><td>1</td></tr>
+        <tr><td>2</td><td>2</td></tr>
+        <tr><td>3</td><td>3</td></tr>
       </tbody>
     </table>
-  </div>
 
-  <div class="fixed-div">
-    This div<br>
-    element has<br>
-    position: fixed;
+    <div class="fixed-div">
+      This div<br>
+      element has<br>
+      position: fixed;
+    </div>
+
   </div>
 
 </body>
