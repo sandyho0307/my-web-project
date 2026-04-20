@@ -2,7 +2,14 @@
 <html>
 <head>
 <style>
-  /* Table styling */
+  /* 畫布控制：限制內容的最大寬度，並置中 */
+  .container {
+    max-width: 600px; /* 限制寬度，解決「畫布太大」的問題 */
+    margin: 0 auto;   /* 置中對齊 */
+    padding-top: 20px;
+  }
+
+  /* 表格設定 */
   table {
     border-collapse: collapse;
     width: 300px;
@@ -11,26 +18,20 @@
     border: 1px solid black;
     padding: 8px;
   }
-  
-  /* Grey header styling */
   th {
-    background-color: #555; 
+    background-color: gray;
     color: white;
   }
   
-  /* Alternating row colors (Yellow for odd rows, White for even) */
-  tbody tr:nth-child(odd) {
-    background-color: yellow;
-  }
-  tbody tr:nth-child(even) {
-    background-color: white;
-  }
+  /* 表格資料行顏色 */
+  tbody tr:nth-child(odd) { background-color: yellow; }
+  tbody tr:nth-child(even) { background-color: white; }
 
-  /* Fixed Div styling */
+  /* 右上角固定區塊設定 */
   .fixed-div {
-    position: fixed;     /* This keeps it stuck to the viewport */
-    top: 20px;           /* Distance from the top */
-    right: 20px;         /* Distance from the right */
+    position: fixed;
+    top: 20px;
+    right: 20px;
     border: 2px solid green;
     padding: 15px;
     width: 150px;
@@ -39,28 +40,30 @@
 </head>
 <body>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Firstname</th>
-        <th>Lastname</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>1</td>
-        <td>1</td>
-      </tr>
-      <tr>
-        <td>2</td>
-        <td>2</td>
-      </tr>
-      <tr>
-        <td>3</td>
-        <td>3</td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="container">
+    <table>
+      <thead>
+        <tr>
+          <th>Firstname</th>
+          <th>Lastname</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>2</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>3</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
   <div class="fixed-div">
     This div<br>
