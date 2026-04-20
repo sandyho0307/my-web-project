@@ -1,1 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  /* Basic Table Styling */
+  table {
+    border-collapse: collapse;
+    width: 300px; /* Fixed width to match the visual proportion */
+  }
 
+  th, td {
+    border: 1px solid black;
+    padding: 8px;
+  }
+
+  /* Header Styling */
+  th {
+    background-color: #555; /* Dark grey */
+    color: white;
+    text-align: left;
+  }
+
+  /* Alternating row colors */
+  /* We use tbody so we don't accidentally color the header */
+  tbody tr:nth-child(odd) {
+    background-color: yellow;
+  }
+  
+  tbody tr:nth-child(even) {
+    background-color: white;
+  }
+
+  /* Fixed Div Styling */
+  .fixed-box {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    border: 2px solid green;
+    padding: 10px;
+    width: 150px;
+  }
+</style>
+</head>
+<body>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Firstname</th>
+        <th>Lastname</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>1</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>2</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>3</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="fixed-box">
+    This div<br>
+    element has<br>
+    position: fixed;
+  </div>
+
+</body>
+</html>
