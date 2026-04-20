@@ -2,41 +2,37 @@
 <html>
 <head>
 <style>
-  /* Basic Table Styling */
+  /* Table styling */
   table {
     border-collapse: collapse;
-    width: 300px; /* Fixed width to match the visual proportion */
+    width: 300px;
   }
-
   th, td {
     border: 1px solid black;
     padding: 8px;
   }
-
-  /* Header Styling */
+  
+  /* Grey header styling */
   th {
-    background-color: #555; /* Dark grey */
+    background-color: #555; 
     color: white;
-    text-align: left;
   }
-
-  /* Alternating row colors */
-  /* We use tbody so we don't accidentally color the header */
+  
+  /* Alternating row colors (Yellow for odd rows, White for even) */
   tbody tr:nth-child(odd) {
     background-color: yellow;
   }
-  
   tbody tr:nth-child(even) {
     background-color: white;
   }
 
-  /* Fixed Div Styling */
-  .fixed-box {
-    position: fixed;
-    top: 20px;
-    right: 20px;
+  /* Fixed Div styling */
+  .fixed-div {
+    position: fixed;     /* This keeps it stuck to the viewport */
+    top: 20px;           /* Distance from the top */
+    right: 20px;         /* Distance from the right */
     border: 2px solid green;
-    padding: 10px;
+    padding: 15px;
     width: 150px;
   }
 </style>
@@ -66,7 +62,7 @@
     </tbody>
   </table>
 
-  <div class="fixed-box">
+  <div class="fixed-div">
     This div<br>
     element has<br>
     position: fixed;
