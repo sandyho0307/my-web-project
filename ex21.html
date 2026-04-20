@@ -5,40 +5,43 @@
   body {
     font-family: "Times New Roman", Times, serif;
     line-height: 1.6;
-    padding: 20px;
+    padding: 30px;
+    max-width: 900px;
   }
 
-  .content {
-    max-width: 800px;
-  }
-
-  /* Inline-block style for the 'Love' words */
+  /* 1. LOVE 的樣式：框線 + 黃色填充 + inline-block */
   .highlight {
-    display: inline-block;
+    display: inline-block; /* 關鍵：保持在行內但可設定邊框與內距 */
     border: 2px solid blue;
-    padding: 2px 4px;
-    margin: 0 2px;
+    background-color: yellow; /* 修正：加上黃色填充 */
+    padding: 2px 5px;
+    margin: 0 3px;
+    vertical-align: middle; /* 微調對齊 */
   }
 
-  /* Floating sidebar with overflow */
+  /* 2. 側邊欄：固定高度 + overflow: auto (滾動式) */
   .sidebar {
     float: right;
-    width: 200px;
-    height: 200px;
-    border: 4px solid green;
+    width: 250px;
+    height: 180px; /* 固定高度，強制內容超出時滾動 */
+    border: 3px solid green;
     padding: 15px;
     margin-left: 20px;
-    overflow: auto; /* This creates the scrollbar if content is too long */
+    overflow: auto; /* 關鍵：滾動條 */
     background-color: #f9f9f9;
+    font-size: 1.1em;
   }
 </style>
 </head>
 <body>
 
-<div class="content">
   <div class="sidebar">
-    A float div with overflow auto. A float div with overflow auto. 
-    This text is long enough to trigger the scrollbar functionality. 
+    A float div with overflow auto. 
+    A float div with overflow auto. 
+    A float div with overflow auto. 
+    This text is long enough to trigger the scrollbar functionality, ensuring it is a "scrolling" div as shown in the example image. 
+    A float div with overflow auto.
+    A float div with overflow auto.
     A float div with overflow auto.
   </div>
 
@@ -54,7 +57,6 @@
     But bears it out even to the edge of doom: If this be error and upon me proved, 
     I never writ, nor no man ever loved.
   </p>
-</div>
 
 </body>
 </html>
