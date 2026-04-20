@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body {
+    font-family: "Times New Roman", Times, serif;
+    line-height: 1.6;
+    padding: 20px;
+  }
+
+  .content {
+    max-width: 800px;
+  }
+
+  /* Inline-block style for the 'Love' words */
+  .highlight {
+    display: inline-block;
+    border: 2px solid blue;
+    padding: 2px 4px;
+    margin: 0 2px;
+  }
+
+  /* Floating sidebar with overflow */
+  .sidebar {
+    float: right;
+    width: 200px;
+    height: 200px;
+    border: 4px solid green;
+    padding: 15px;
+    margin-left: 20px;
+    overflow: auto; /* This creates the scrollbar if content is too long */
+    background-color: #f9f9f9;
+  }
+</style>
+</head>
+<body>
+
+<div class="content">
+  <div class="sidebar">
+    A float div with overflow auto. A float div with overflow auto. 
+    This text is long enough to trigger the scrollbar functionality. 
+    A float div with overflow auto.
+  </div>
+
+  <p>
+    (Just long sentence.) Let me not to the marriage of true minds Admit impediments. 
+    <span class="highlight">Love</span> is not love Which alters when it alteration finds, 
+    Or bends with the remover to remove: O, no! it is an ever-fix'ed mark, 
+    That looks on tempests and is never shaken; It is the star to every wand'ring bark, 
+    Whose worth's unknown, although his heigth be taken. 
+    <span class="highlight">Love's</span> not Time's fool, though rosy lips and cheeks 
+    Within his bending sickle's compass come; 
+    <span class="highlight">Love</span> alters not with his brief hours and weeks, 
+    But bears it out even to the edge of doom: If this be error and upon me proved, 
+    I never writ, nor no man ever loved.
+  </p>
+</div>
+
+</body>
+</html>
