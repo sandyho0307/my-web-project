@@ -1,42 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { padding: 20px; font-family: sans-serif; }
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { padding: 20px; font-family: sans-serif; }
 
-    .green-header { background-color: #9ccc65; height: 100px; width: 100%; margin-bottom: 20px; }
+        /* 1. 綠色頭部 */
+        .green-header { background-color: #9ccc65; height: 100px; width: 100%; margin-bottom: 20px; }
 
-    /* 電腦版：藍色區塊設定 */
-    .blue-container { 
-        display: flex; 
-        gap: 15px; 
-        margin-bottom: 20px; 
-        justify-content: center; /* 讓內容置中 */
-    }
-    .blue-box { 
-        background-color: #00bcd4; 
-        height: 400px;       /* 設定明確高度 */
-        max-width: 200px;    /* 【關鍵】限制最大寬度，確保縱邊 > 橫邊 */
-        flex: 1; 
-    }
-
-    /* 電腦版：灰色區塊 */
-    .grey-container { display: flex; flex-wrap: wrap; gap: 15px; }
-    .grey-box { background-color: #e0e0e0; height: 100px; flex: 0 0 calc(25% - 15px); }
-
-    /* --- 手機版 (小於 480px) --- */
-    @media screen and (max-width: 480px) {
-        .blue-container { flex-direction: column; align-items: center; }
-        .blue-box { 
-            height: 250px; 
-            width: 80%;      /* 手機版：限制寬度讓它居中且直立 */
-            max-width: none; /* 取消限制 */
+        /* 2. 中間藍色區塊：電腦版 */
+        .blue-container { 
+            display: flex; 
+            gap: 15px; 
+            margin-bottom: 20px; 
         }
-        .grey-box { flex: 0 0 calc(50% - 15px); }
-    }
-</style>
+        .blue-box { 
+            background-color: #00bcd4; 
+            flex: 1; 
+            height: 400px !important; /* 強制高度，確保縱邊長 */
+        }
+
+        /* 3. 下方灰色區塊 */
+        .grey-container { display: flex; flex-wrap: wrap; gap: 15px; }
+        .grey-box { background-color: #e0e0e0; height: 100px; flex: 0 0 calc(25% - 15px); }
+
+        /* --- 響應式：手機版 (小於 480px) --- */
+        @media screen and (max-width: 480px) {
+            .blue-container { flex-direction: column !important; }
+            .blue-box { 
+                height: 250px !important; /* 手機版明確給予高度 */
+                width: 100% !important; 
+            }
+            .grey-box { flex: 0 0 calc(50% - 15px) !important; }
+        }
+    </style>
 </head>
 <body>
     <div class="green-header"></div>
