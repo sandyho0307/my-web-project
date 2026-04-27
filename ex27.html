@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  * { box-sizing: border-box; }
+  body { padding: 20px; }
+
+  /* 綠色長方形 */
+  .green-box {
+    background-color: #9ccc65;
+    height: 100px;
+    margin-bottom: 10px;
+  }
+
+  /* 中間藍色區域：預設為垂直排列 (a) */
+  .blue-container {
+    display: flex;
+    flex-direction: column; /* 垂直堆疊 */
+    gap: 10px;
+  }
+  .blue-box {
+    background-color: #00bcd4;
+    height: 60px;
+    flex: 1;
+  }
+
+  /* 下方灰色區域：預設為 2x2 格狀 (a) */
+  .gray-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .gray-box {
+    background-color: #e0e0e0;
+    height: 60px;
+    flex: 1 1 45%; /* 每一行兩個 */
+  }
+
+  /* 媒體查詢：當螢幕寬度小於 480px 時，切換為 (b) */
+  @media screen and (max-width: 480px) {
+    /* 中間變橫向 */
+    .blue-container {
+      flex-direction: row; 
+    }
+    
+    /* 下方變橫向 4 個一排 */
+    .gray-box {
+      flex: 1 1 20%; /* 每一行四個 */
+    }
+  }
+</style>
+</head>
+<body>
+
+  <div class="green-box"></div>
+
+  <div class="blue-container">
+    <div class="blue-box"></div>
+    <div class="blue-box"></div>
+    <div class="blue-box"></div>
+  </div>
+
+  <div class="gray-container">
+    <div class="gray-box"></div>
+    <div class="gray-box"></div>
+    <div class="gray-box"></div>
+    <div class="gray-box"></div>
+  </div>
+
+</body>
+</html>
