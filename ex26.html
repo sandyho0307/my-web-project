@@ -2,42 +2,45 @@
 <html>
 <head>
 <style>
-  /* 使用 Flexbox 讓三張圖片並排 */
+  /* 容器：讓圖片置中對齊 */
   .container {
     display: flex;
-    align-items: flex-start; /* 讓圖片上方對齊 */
-    gap: 20px;
+    align-items: center; /* 讓圖片垂直置中 */
+    justify-content: center; /* 水平置中 */
+    gap: 30px;
     padding: 20px;
   }
 
-  /* 1. 左側：直式圓角長方形 (無變形) */
-  .rounded-img {
-    width: 33%;        
-    height: 450px;     /* 增加高度，使其呈現直長條狀 */
-    border-radius: 18px; 
-    object-fit: cover; /* 裁切以填滿空間，不變形 */
+  /* 左右兩側圖片的共同設定 */
+  .rounded-img, .distorted-img {
+    width: 300px;      /* 指定寬度 */
+    height: 450px;     /* 統一高度，確保縱邊對齊 */
   }
 
-  /* 2. 中間：圓形 (無變形，使用 pexels-alexbph-18207630.jpg) */
+  /* 1. 左側：圓角 (no distortion) */
+  .rounded-img {
+    border-radius: 18px; 
+    object-fit: cover; 
+    /* 關鍵：優先顯示圖片上方 (塔尖) */
+    object-position: center top; 
+  }
+
+  /* 2. 中間：圓形 (no distortion) */
   .circle-img {
     width: 150px;      
     height: 150px;     
     border: 5px solid #333; 
     border-radius: 50%; 
-    object-fit: cover; /* 確保圓形不變形 */
+    object-fit: cover; 
   }
 
-  /* 3. 右側：直式變形長方形 (產生 distortion) */
+  /* 3. 右側：變形長方形 (distortion) */
   .distorted-img {
-    width: 33%;        
-    height: 450px;     
-    object-fit: fill;  /* 強制拉伸，讓鐵塔變形 */
+    object-fit: fill;  /* 強制拉伸，產生變形效果 */
   }
 </style>
 </head>
 <body>
-
-<h2>Vertical Layout Practice</h2>
 
 <div class="container">
   <img src="pexels-flora-hsu-32249896-7008047.jpg" alt="No Distortion" class="rounded-img">
