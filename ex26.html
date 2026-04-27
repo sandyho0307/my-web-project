@@ -5,42 +5,44 @@
   /* 使用 Flexbox 讓三張圖片並排 */
   .container {
     display: flex;
-    align-items: center;
+    align-items: flex-start; /* 讓圖片上方對齊 */
     gap: 20px;
     padding: 20px;
   }
 
-  /* 1. 左側：圓角長方形 (無變形) */
+  /* 1. 左側：直式圓角長方形 (無變形) */
   .rounded-img {
-    width: 33%;        /* 寬度 33% */
-    height: 300px;     /* 固定高度 */
+    width: 33%;        
+    height: 450px;     /* 增加高度，使其呈現直長條狀 */
     border-radius: 18px; 
-    object-fit: cover; /* 裁切以填滿空間，保留比例 */
+    object-fit: cover; /* 裁切以填滿空間，不變形 */
   }
 
-  /* 2. 中間：圓形 (無變形) */
+  /* 2. 中間：圓形 (無變形，使用 pexels-alexbph-18207630.jpg) */
   .circle-img {
     width: 150px;      
     height: 150px;     
     border: 5px solid #333; 
     border-radius: 50%; 
-    object-fit: cover; /* 裁切以填滿圓形 */
+    object-fit: cover; /* 確保圓形不變形 */
   }
 
-  /* 3. 右側：變形長方形 (產生 distortion) */
+  /* 3. 右側：直式變形長方形 (產生 distortion) */
   .distorted-img {
     width: 33%;        
-    height: 300px;     
-    object-fit: fill;  /* 強制拉伸，讓圖片變形 */
+    height: 450px;     
+    object-fit: fill;  /* 強制拉伸，讓鐵塔變形 */
   }
 </style>
 </head>
 <body>
 
+<h2>Vertical Layout Practice</h2>
+
 <div class="container">
   <img src="pexels-flora-hsu-32249896-7008047.jpg" alt="No Distortion" class="rounded-img">
 
-  <img src="pexels-flora-hsu-32249896-7008047.jpg" alt="Circle" class="circle-img">
+  <img src="pexels-alexbph-18207630.jpg" alt="Circle" class="circle-img">
 
   <img src="pexels-flora-hsu-32249896-7008047.jpg" alt="Distortion" class="distorted-img">
 </div>
