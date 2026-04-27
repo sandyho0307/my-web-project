@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body {
+    font-family: "Arial", sans-serif;
+    padding: 40px;
+    background-color: #f4f4f9;
+  }
+
+  /* 頂部按鈕區塊 */
+  .header-section {
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  /* 按鈕樣式 */
+  .btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  }
+
+  .btn:hover {
+    background-color: #0056b3;
+  }
+
+  /* 詳細資訊區塊 (預設隱藏) */
+  #detailed-content {
+    display: none; /* 預設隱藏 */
+    background-color: white;
+    padding: 30px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
+
+  h2 { color: #333; }
+  ul { line-height: 1.8; }
+</style>
+</head>
+<body>
+
+  <div class="header-section">
+    <button class="btn" onclick="toggleDetails()">CREATE A WEB PAGE</button>
+    <p>Click this button to see details about web page creation for engineering-design collaboration.</p>
+  </div>
+
+  <div id="detailed-content">
+    <h2>THE COLLABORATION PROCESS</h2>
+    <p>The well-designed design files communicate intent for engineering-design collaboration.</p>
+    
+    <ul>
+      <li><strong>Shared Vision:</strong> Designers provide design files; Engineers interpret.</li>
+      <li><strong>Asset Handoff:</strong> Using tools for easy delivery of colors, fonts, images.</li>
+      <li><strong>Implementation Loop:</strong> Frequent feedback and iteration on the interface.</li>
+      <li><strong>Communication:</strong> Clear language to bridge design and code.</li>
+      <li><strong>Tooling:</strong> Version control for both code and design.</li>
+    </ul>
+
+    <p>Bridging the gap, we provide tools that help design mockups for engineering-design...</p>
+  </div>
+
+  <script>
+    function toggleDetails() {
+      var content = document.getElementById("detailed-content");
+      if (content.style.display === "none" || content.style.display === "") {
+        content.style.display = "block";
+      } else {
+        content.style.display = "none";
+      }
+    }
+  </script>
+
+</body>
+</html>
