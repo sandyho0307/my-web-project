@@ -6,49 +6,55 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { padding: 20px; font-family: sans-serif; }
 
-    /* 綠色頭部 */
+    /* 1. 綠色頭部 */
     .green-header { background-color: #9ccc65; height: 100px; width: 100%; margin-bottom: 20px; }
 
-    /* 中間藍色區塊 (電腦版) */
+    /* 2. 中間藍色區塊：使用 Grid 確保 3 欄 */
     .blue-container { 
-        display: flex; 
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* 強制3欄 */
         gap: 15px; 
         margin-bottom: 20px; 
-        align-items: stretch;
     }
     .blue-box { 
         background-color: #00bcd4; 
-        flex: 1; 
-        height: 400px; /* 【強制鎖定高度】確保縱邊長於橫邊 */
+        height: 400px; /* 強制高瘦長方形 */
+        width: 100%;
     }
 
-    /* 下方灰色區塊 (電腦版) */
-    .grey-container { display: flex; flex-wrap: wrap; gap: 15px; }
-    .grey-box { background-color: #e0e0e0; height: 100px; flex: 0 0 calc(25% - 12px); }
+    /* 3. 下方灰色區塊：使用 Grid 確保 4 欄 */
+    .grey-container { 
+        display: grid;
+        grid-template-columns: repeat(4, 1fr); /* 強制4欄 */
+        gap: 15px; 
+    }
+    .grey-box { background-color: #e0e0e0; height: 100px; }
 
-    /* --- 響應式：手機版 (小於 480px) --- */
+    /* --- 手機版 (小於 480px) --- */
     @media screen and (max-width: 480px) {
-        .blue-container { flex-direction: column !important; }
-        .blue-box { 
-            height: 300px !important; /* 手機版也強制給予足夠高度 */
-            width: 100% !important; 
-        }
-        .grey-box { flex: 0 0 calc(50% - 8px) !important; }
+        .blue-container { grid-template-columns: 1fr; } /* 手機變成1欄 */
+        .blue-box { height: 250px; } /* 手機版的高度 */
+        
+        .grey-container { grid-template-columns: repeat(2, 1fr); } /* 手機變成2欄 (2x2) */
     }
 </style>
 </head>
 <body>
+
     <div class="green-header"></div>
+
     <div class="blue-container">
         <div class="blue-box"></div>
         <div class="blue-box"></div>
         <div class="blue-box"></div>
     </div>
+
     <div class="grey-container">
         <div class="grey-box"></div>
         <div class="grey-box"></div>
         <div class="grey-box"></div>
         <div class="grey-box"></div>
     </div>
+
 </body>
 </html>
