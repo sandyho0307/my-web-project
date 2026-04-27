@@ -1,36 +1,52 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        * { box-sizing: border-box; }
-        body { margin: 20px; font-family: sans-serif; }
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { padding: 20px; font-family: sans-serif; }
 
-        /* 1. 綠色頭部 (全寬) */
-        .green-header { background-color: #9ccc65; height: 100px; width: 100%; margin-bottom: 20px; }
+    /* 1. 綠色頭部 */
+    .header { background-color: #9ccc65; height: 100px; width: 100%; margin-bottom: 20px; }
 
-        /* 2. 中間藍色區塊 (預設橫向) */
-        .blue-container { display: flex; gap: 15px; margin-bottom: 20px; }
-        .blue-box { background-color: #00bcd4; flex: 1; height: 100px; }
+    /* 2. 中間藍色區塊 (預設電腦版：3欄，高聳) */
+    .blue-container { 
+        display: flex; 
+        gap: 15px; 
+        margin-bottom: 20px; 
+    }
+    .blue-box { 
+        background-color: #00bcd4; 
+        flex: 1; 
+        height: 300px; /* 強制高度，讓它縱邊 > 橫邊 */
+    }
 
-        /* 3. 下方灰色區塊 (預設橫向4個) */
-        .grey-container { display: flex; gap: 15px; flex-wrap: wrap; }
-        .grey-box { background-color: #e0e0e0; height: 100px; flex: 1; }
+    /* 3. 下方灰色區塊 (預設電腦版：4欄並排) */
+    .grey-container { 
+        display: flex; 
+        flex-wrap: wrap; 
+        gap: 15px; 
+    }
+    .grey-box { 
+        background-color: #e0e0e0; 
+        height: 100px; 
+        flex: 0 0 calc(25% - 12px); /* 電腦版：25% = 4個並排 */
+    }
 
-        /* --- 響應式邏輯 --- */
-        @media screen and (max-width: 480px) {
-            /* 中間區塊：改成垂直堆疊 */
-            .blue-container { flex-direction: column; }
+    /* --- 響應式：手機版 (小於 480px) --- */
+    @media screen and (max-width: 480px) {
+        /* 中間：垂直堆疊，恢復自動高度以免過長 */
+        .blue-container { flex-direction: column; }
+        .blue-box { height: 150px; } 
 
-            /* 下方區塊：改成 2x2 格狀 (每行兩個) */
-            .grey-box { flex: 0 0 calc(50% - 8px); }
-        }
-    </style>
+        /* 下方：2x2 格狀 (每行兩個) */
+        .grey-box { flex: 0 0 calc(50% - 8px); }
+    }
+</style>
 </head>
 <body>
 
-    <div class="green-header"></div>
+    <div class="header"></div>
 
     <div class="blue-container">
         <div class="blue-box"></div>
