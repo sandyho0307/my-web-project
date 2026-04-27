@@ -2,25 +2,26 @@
 <html>
 <head>
 <style>
-  /* 容器：讓圖片置中對齊，並確保垂直頂端對齊 */
+  * { box-sizing: border-box; } /* 確保 padding/border 不會影響寬度計算 */
+
   .container {
     display: flex;
-    align-items: flex-start; 
+    align-items: center; /* 垂直居中對齊 */
     justify-content: center;
-    gap: 30px;
+    gap: 20px;
     padding: 20px;
   }
 
-  /* 1. 左側：直式圓角長方形 (no distortion) */
+  /* 1. 左側：寬 33%，高 300px，圓角 18px (no distortion) */
   .rounded-img {
-    width: 300px;      
-    height: 450px;     
+    width: 33%;        
+    height: 300px;     
     border-radius: 18px; 
-    object-fit: cover; /* 裁切以填滿，保留比例 */
-    object-position: center top; /* 確保鐵塔頂端不被切掉 */
+    object-fit: cover; 
+    object-position: center top; 
   }
 
-  /* 2. 中間：圓形 (no distortion) */
+  /* 2. 中間：150px x 150px 圓形 (no distortion) */
   .circle-img {
     width: 150px;      
     height: 150px;     
@@ -29,11 +30,11 @@
     object-fit: cover; 
   }
 
-  /* 3. 右側：極端變形長方形 (distortion) */
+  /* 3. 右側：寬 33%，高 300px (distortion) */
   .distorted-img {
-    width: 100px;      /* 縮小寬度，強制產生劇烈變形 */
-    height: 450px;     /* 高度維持 450px，確保與左側對齊 */
-    object-fit: fill;  /* 強制填滿容器，導致嚴重變形 */
+    width: 33%;        
+    height: 300px;     
+    object-fit: fill;  /* 強制填滿造成變形 */
   }
 </style>
 </head>
