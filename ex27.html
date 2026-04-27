@@ -3,13 +3,13 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-    * { box-sizing: border-box; }
-    body { margin: 20px; font-family: sans-serif; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { padding: 20px; font-family: sans-serif; }
 
     /* 1. 綠色頭部 */
     .green-header { background-color: #9ccc65; height: 100px; width: 100%; margin-bottom: 20px; }
 
-    /* 2. 中間藍色區塊 (預設電腦版) */
+    /* 2. 中間藍色區塊：強制高度 > 寬度，形成高瘦長方形 */
     .blue-container { 
         display: flex; 
         gap: 15px; 
@@ -18,10 +18,10 @@
     .blue-box { 
         background-color: #00bcd4; 
         flex: 1; 
-        height: 350px; /* 【修正】強制高度，讓它變得高且長 (直邊 > 橫邊) */
+        height: 350px; /* 這裡設定高度比寬度大，讓它變成直的 */
     }
 
-    /* 3. 下方灰色區塊 (預設電腦版：4欄並排) */
+    /* 3. 下方灰色區塊 */
     .grey-container { 
         display: flex; 
         flex-wrap: wrap; 
@@ -30,23 +30,20 @@
     .grey-box { 
         background-color: #e0e0e0; 
         height: 100px; 
-        flex: 0 0 calc(25% - 12px); /* 4欄 */
+        flex: 0 0 calc(25% - 12px); /* 電腦版：4個並排 */
     }
 
     /* --- 響應式：手機版 (小於 480px) --- */
     @media screen and (max-width: 480px) {
         /* 中間：垂直堆疊 */
-        .blue-container { 
-            flex-direction: column; 
-            display: flex; /* 確保 flex 正常運作 */
-        }
+        .blue-container { flex-direction: column; }
         .blue-box { 
-            height: 200px; /* 【修正】給予明確高度，確保它不會消失 */
-            width: 100%;   /* 強制填滿寬度 */
+            height: 200px; /* 手機版：給予固定高度，確保不消失 */
+            width: 100%;   /* 手機版：強制全寬 */
         } 
 
         /* 下方：2x2 格狀 */
-        .grey-box { flex: 0 0 calc(50% - 8px); }
+        .grey-box { flex: 0 0 calc(50% - 8px); } 
     }
 </style>
 </head>
