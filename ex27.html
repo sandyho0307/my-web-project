@@ -1,61 +1,49 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-  * { box-sizing: border-box; }
-  body { padding: 20px; font-family: sans-serif; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * { box-sizing: border-box; }
+        body { margin: 20px; font-family: sans-serif; }
 
-  /* 綠色頭部：始終全寬 */
-  .header { background-color: #9ccc65; height: 100px; width: 100%; margin-bottom: 20px; }
+        /* 1. 綠色頭部 (全寬) */
+        .green-header { background-color: #9ccc65; height: 100px; width: 100%; margin-bottom: 20px; }
 
-  /* 中間區塊容器 */
-  .middle-container {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 20px;
-  }
-  .blue-box { background-color: #00bcd4; flex: 1; height: 100px; }
+        /* 2. 中間藍色區塊 (預設橫向) */
+        .blue-container { display: flex; gap: 15px; margin-bottom: 20px; }
+        .blue-box { background-color: #00bcd4; flex: 1; height: 100px; }
 
-  /* 下方區塊容器 */
-  .footer-container {
-    display: flex;
-    flex-wrap: wrap; /* 允許換行，達成 2x2 效果 */
-    gap: 15px;
-  }
-  .grey-box { background-color: #e0e0e0; height: 100px; }
+        /* 3. 下方灰色區塊 (預設橫向4個) */
+        .grey-container { display: flex; gap: 15px; flex-wrap: wrap; }
+        .grey-box { background-color: #e0e0e0; height: 100px; flex: 1; }
 
-  /* --- 桌面版 (預設為 b 的樣式) --- */
-  /* 中間：三個橫向並排 */
-  /* 下方：四個橫向並排 (flex: 25% = 4個) */
-  .grey-box { flex: 0 0 calc(25% - 12px); }
+        /* --- 響應式邏輯 --- */
+        @media screen and (max-width: 480px) {
+            /* 中間區塊：改成垂直堆疊 */
+            .blue-container { flex-direction: column; }
 
-  /* --- 手機版 (寬度小於 480px 時切換為 a 的樣式) --- */
-  @media screen and (max-width: 480px) {
-    /* 中間：切換為縱向堆疊 */
-    .middle-container { flex-direction: column; }
-    
-    /* 下方：切換為左右各兩個 (flex: 50% = 2個) */
-    .grey-box { flex: 0 0 calc(50% - 8px); }
-  }
-</style>
+            /* 下方區塊：改成 2x2 格狀 (每行兩個) */
+            .grey-box { flex: 0 0 calc(50% - 8px); }
+        }
+    </style>
 </head>
 <body>
 
-  <div class="header"></div>
+    <div class="green-header"></div>
 
-  <div class="middle-container">
-    <div class="blue-box"></div>
-    <div class="blue-box"></div>
-    <div class="blue-box"></div>
-  </div>
+    <div class="blue-container">
+        <div class="blue-box"></div>
+        <div class="blue-box"></div>
+        <div class="blue-box"></div>
+    </div>
 
-  <div class="footer-container">
-    <div class="grey-box"></div>
-    <div class="grey-box"></div>
-    <div class="grey-box"></div>
-    <div class="grey-box"></div>
-  </div>
+    <div class="grey-container">
+        <div class="grey-box"></div>
+        <div class="grey-box"></div>
+        <div class="grey-box"></div>
+        <div class="grey-box"></div>
+    </div>
 
 </body>
 </html>
