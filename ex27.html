@@ -4,69 +4,57 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
   * { box-sizing: border-box; }
-  body { padding: 20px; }
+  body { padding: 20px; font-family: sans-serif; }
 
-  /* 綠色長方形 */
-  .green-box {
-    background-color: #9ccc65;
-    height: 100px;
-    margin-bottom: 10px;
-  }
+  /* 綠色頭部：始終全寬 */
+  .header { background-color: #9ccc65; height: 100px; width: 100%; margin-bottom: 20px; }
 
-  /* 中間藍色區域：預設為垂直排列 (a) */
-  .blue-container {
+  /* 中間區塊容器 */
+  .middle-container {
     display: flex;
-    flex-direction: column; /* 垂直堆疊 */
-    gap: 10px;
+    gap: 15px;
+    margin-bottom: 20px;
   }
-  .blue-box {
-    background-color: #00bcd4;
-    height: 60px;
-    flex: 1;
-  }
+  .blue-box { background-color: #00bcd4; flex: 1; height: 100px; }
 
-  /* 下方灰色區域：預設為 2x2 格狀 (a) */
-  .gray-container {
+  /* 下方區塊容器 */
+  .footer-container {
     display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 10px;
+    flex-wrap: wrap; /* 允許換行，達成 2x2 效果 */
+    gap: 15px;
   }
-  .gray-box {
-    background-color: #e0e0e0;
-    height: 60px;
-    flex: 1 1 45%; /* 每一行兩個 */
-  }
+  .grey-box { background-color: #e0e0e0; height: 100px; }
 
-  /* 媒體查詢：當螢幕寬度小於 480px 時，切換為 (b) */
+  /* --- 桌面版 (預設為 b 的樣式) --- */
+  /* 中間：三個橫向並排 */
+  /* 下方：四個橫向並排 (flex: 25% = 4個) */
+  .grey-box { flex: 0 0 calc(25% - 12px); }
+
+  /* --- 手機版 (寬度小於 480px 時切換為 a 的樣式) --- */
   @media screen and (max-width: 480px) {
-    /* 中間變橫向 */
-    .blue-container {
-      flex-direction: row; 
-    }
+    /* 中間：切換為縱向堆疊 */
+    .middle-container { flex-direction: column; }
     
-    /* 下方變橫向 4 個一排 */
-    .gray-box {
-      flex: 1 1 20%; /* 每一行四個 */
-    }
+    /* 下方：切換為左右各兩個 (flex: 50% = 2個) */
+    .grey-box { flex: 0 0 calc(50% - 8px); }
   }
 </style>
 </head>
 <body>
 
-  <div class="green-box"></div>
+  <div class="header"></div>
 
-  <div class="blue-container">
+  <div class="middle-container">
     <div class="blue-box"></div>
     <div class="blue-box"></div>
     <div class="blue-box"></div>
   </div>
 
-  <div class="gray-container">
-    <div class="gray-box"></div>
-    <div class="gray-box"></div>
-    <div class="gray-box"></div>
-    <div class="gray-box"></div>
+  <div class="footer-container">
+    <div class="grey-box"></div>
+    <div class="grey-box"></div>
+    <div class="grey-box"></div>
+    <div class="grey-box"></div>
   </div>
 
 </body>
