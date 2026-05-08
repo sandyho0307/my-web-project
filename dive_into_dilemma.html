@@ -10,16 +10,15 @@
         :root { --accent: #00bcd4; }
         body { margin: 0; padding: 0; background: #000; color: white; font-family: "Inter", "Microsoft JhengHei", sans-serif; overflow-x: hidden; }
 
-        /* [設計理念] 深度漸層背景：確保隨捲動產生明顯顏色變化 */
+        /* [設計理念] 獨立背景層：解決濾鏡導致文字模糊問題 */
         #ocean-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to bottom, #87CEEB 0%, #01579b 15%, #002147 40%, #000 70%);
-            background-size: 100% 12000px; /* 拉長背景，確保下潛有感 */
-            z-index: -2; transition: filter 2s ease;
+            background: linear-gradient(to bottom, #87CEEB 0%, #01579b 20%, #002147 50%, #000 80%);
+            background-size: 100% 12000px; z-index: -2; transition: filter 1.5s ease;
         }
 
-        /* [特殊功能] 污染效果 */
-        #pollution-overlay {
+        /* [特殊功能] 懸浮微粒與震動效果 */
+        #particles {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-image: radial-gradient(circle, #4b3a2b 2px, transparent 2px);
             background-size: 60px 60px; opacity: 0; pointer-events: none; z-index: -1;
@@ -28,49 +27,43 @@
         .active-pollution { opacity: 0.7 !important; animation: drift 15s linear infinite; }
         @keyframes drift { from { background-position: 0 0; } to { background-position: 500px 1000px; } }
 
-        /* [佈局設計] 固定視窗 */
+        /* [佈局設計] 固定探測器視窗 */
         .submersible-window {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             width: 85vw; height: 65vh; border: 15px solid rgba(255,255,255,0.05);
-            border-radius: 50px; box-shadow: 0 0 0 2000px rgba(0,0,0,0.65);
+            border-radius: 50px; box-shadow: 0 0 0 2000px rgba(0,0,0,0.7);
             pointer-events: none; z-index: 1000;
         }
 
-        /* 靜音按鈕 UI */
-        #audio-toggle {
-            position: fixed; left: 30px; bottom: 30px; z-index: 2000;
-            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3);
-            color: white; padding: 10px 15px; border-radius: 50px; cursor: pointer;
-            backdrop-filter: blur(5px); transition: 0.3s;
+        /* 靜音按鈕 */
+        #audio-ctrl {
+            position: fixed; left: 30px; bottom: 30px; z-index: 2001;
+            background: rgba(255,255,255,0.1); border: 1px solid white;
+            color: white; padding: 10px 20px; border-radius: 50px; cursor: pointer;
         }
-        #audio-toggle:hover { background: rgba(255,255,255,0.3); }
 
-        /* [視覺效果] 生態物件（開心水族箱風格） */
-        .ocean-life { position: absolute; transition: all 2s ease; z-index: 10; }
-        .fish-school img { width: 60px; margin: 5px; animation: swim 3s infinite alternate; }
-        .seaweed { width: 100px; height: auto; opacity: 0.6; }
-        @keyframes swim { from { transform: translate(0,0); } to { transform: translate(30px, 15px); } }
-
-        /* 內容層級 */
-        .scroll-wrapper { position: relative; width: 100%; height: 10000px; z-index: 5; }
-        .depth-info { position: fixed; right: 40px; top: 50%; transform: translateY(-50%); z-index: 1001; text-align: right; }
-
-        /* [互動設計] 問答彈窗 */
+        /* [互動設計] OoopenLab 風格問答卡片 [cite: 22-24] */
         .dilemma-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.85); display: none;
             justify-content: center; align-items: center; z-index: 3000;
             backdrop-filter: blur(20px);
         }
-        .quiz-card {
-            background: rgba(15, 15, 15, 0.95); padding: 50px; border-radius: 40px;
-            border: 1px solid var(--accent); text-align: center; max-width: 650px;
-        }
-        .choice-btn {
-            width: 100%; margin-top: 15px; padding: 18px; border-radius: 15px;
-            border: 1px solid rgba(255,255,255,0.2); background: transparent; color: white;
-        }
+        .quiz-card { background: rgba(20, 20, 20, 0.95); padding: 50px; border-radius: 40px; border: 1px solid var(--accent); text-align: center; max-width: 650px; }
+        .choice-btn { width: 100%; margin-top: 15px; padding: 18px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.2); background: transparent; color: white; transition: 0.3s; }
         .choice-btn:hover { background: white; color: black; }
+
+        /* [視覺效果] 生態物件 */
+        .ocean-life { position: absolute; transition: all 2s ease; z-index: 10; }
+        .fish-group img { width: 80px; margin: 5px; animation: swim 4s infinite alternate; }
+        @keyframes swim { from { transform: translate(0,0); } to { transform: translate(40px, 20px); } }
+
+        .scroll-wrapper { position: relative; width: 100%; height: 12000px; z-index: 5; }
+        .depth-gauge { position: fixed; right: 40px; top: 50%; transform: translateY(-50%); z-index: 1001; text-align: right; }
+
+        /* 結算頁面 */
+        #result-page { display: none; padding: 100px 20px; text-align: center; background: #000; min-height: 100vh; position: relative; z-index: 4000; }
+        .result-card { background: linear-gradient(135deg, #1e3a8a, #1e40af); padding: 50px; border-radius: 40px; display: inline-block; max-width: 550px; }
     </style>
 </head>
 <body>
@@ -80,42 +73,57 @@
     </audio>
 
     <div id="ocean-bg"></div>
-    <div id="pollution-overlay"></div>
+    <div id="particles"></div>
     <div class="submersible-window"></div>
+    
+    <button id="audio-ctrl" onclick="toggleAudio()">🔊 音樂：關閉</button>
 
-    <button id="audio-toggle" onclick="toggleAudio()">🔊 SOUND ON</button>
-
-    <div class="depth-info">
+    <div class="depth-gauge">
         <h1 class="display-2 fw-bold mb-0"><span id="meters">0</span>M</h1>
-        <p class="h4" id="zone-label" class="text-info">SUNLIGHT ZONE</p>
+        <p class="h4" id="zone-label">SUNLIGHT ZONE</p>
     </div>
 
     <div id="quiz-modal" class="dilemma-overlay">
         <div class="quiz-card">
-            <h6 id="quiz-step" class="text-info mb-2 small">SDG 兩難實驗</h6>
-            <h2 id="quiz-title" class="mb-4 fw-bold"></h2>
-            <p id="quiz-text" class="lead mb-5 opacity-75"></p>
+            <h6 id="quiz-step" class="text-info mb-2 small tracking-widest">STEP 01 / 05</h6>
+            <h2 id="quiz-title" class="mb-4 fw-bold">標題</h2>
+            <p id="quiz-text" class="lead mb-5 opacity-75">內容</p>
             <div id="choices-container"></div>
         </div>
     </div>
 
-    <div class="scroll-wrapper">
+    <div class="scroll-wrapper" id="scroll-content">
         <section style="height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-            <h1 class="display-1 fw-bold" data-aos="fade-up">Dive into Dilemma</h1>
-            <p class="lead" data-aos="fade-up" data-aos-delay="200">點擊下方按鈕開啟聲音，往下捲動開始下潛</p>
+            <h1 class="display-1 fw-bold" data-aos="zoom-in">Dive into Dilemma</h1>
+            <p class="lead">點擊左下角開啟海浪聲，向下捲動開始下潛</p>
         </section>
 
-        <div id="eco-system-sunlight">
-            <div class="ocean-life fish-school" style="top: 1200px; left: 10%;">
-                <img src="https://img.icons8.com/color/96/fish.png"><img src="https://img.icons8.com/color/96/clown-fish.png">
-                <br><img src="https://img.icons8.com/color/96/angelfish.png"><img src="https://img.icons8.com/color/96/fish.png">
-            </div>
-            <div class="ocean-life" style="top: 1500px; right: 20%;"><img src="https://img.icons8.com/color/160/sea-turtle.png" style="width: 180px;"></div>
-            <div class="ocean-life" style="top: 1800px; left: 5%;"><img src="https://img.icons8.com/color/160/seaweed.png" class="seaweed"></div>
+        <div id="eco-system" class="ocean-life fish-group" style="top: 1500px; left: 10%;">
+            <img src="https://img.icons8.com/color/96/fish.png">
+            <img src="https://img.icons8.com/color/96/clown-fish.png">
+            <img src="https://img.icons8.com/color/96/angelfish.png">
         </div>
+        
+        <div id="trash-system" class="ocean-life" style="top: 4000px; right: 10%; opacity: 0;">
+            <img src="https://img.icons8.com/color/160/trash.png" style="width: 200px;">
+            <p class="text-danger fw-bold">海洋廢棄物累積中</p>
+        </div>
+    </div>
 
-        <div id="eco-system-midnight">
-            <div class="ocean-life" style="top: 4500px; left: 15%;"><img src="https://img.icons8.com/color/160/jellyfish.png" style="width: 130px;"></div>
+    <div id="result-page">
+        <div class="result-card" data-aos="flip-up">
+            <h5 class="opacity-75 mb-3">YOUR IDENTITY</h5>
+            <h1 id="personality-name" class="display-4 fw-bold mb-4">分析中...</h1>
+            <p id="personality-desc" class="lead mb-5"></p>
+            <div class="row mb-4">
+                <div class="col-6">👥 <span id="same-pct">0</span>% 同類人</div>
+                <div class="col-6">🤝 夥伴：<span id="best-match">分析師</span></div>
+            </div>
+            <div class="p-4 bg-white text-dark rounded-4 text-start">
+                <h6 class="fw-bold">📍 Takeaway 行動指南</h6>
+                <p id="takeaway-text" class="small mb-0"></p>
+            </div>
+            <button class="btn btn-outline-light mt-4 rounded-pill px-4" onclick="location.reload()">重新探索</button>
         </div>
     </div>
 
@@ -124,51 +132,44 @@
         AOS.init({ duration: 1200 });
         
         const quizData = {
-            300: { title: "離岸風電與生態之爭", text: "興建風場可提供大量綠能(SDG 13)，但施工噪音會讓白海豚迷航死亡。你的決策？", c1: "支持轉型：忍受局部代價", c2: "保育優先：守護生物棲地" },
-            800: { title: "幽靈漁網的遺落", text: "海中發現大量廢棄漁網(SDG 14)。清理需耗費燃料產生碳排，且預算極高。如何處理？", c1: "立即清理：保護海洋生命", c2: "維持低碳：優先減緩氣候變遷" }
+            300: { step: "01/05", title: "風電與白海豚", text: "興建離岸風機有助於減碳(SDG 13)，但施工噪音會讓鯨豚迷航。你支持嗎？", c1: "支持轉型：忍受局部代價", c2: "保育優先：守護生物棲地" },
+            700: { step: "02/05", title: "深海漁網遺落", text: "發現大量棄網(SDG 14)。清理需耗費大量燃料產生碳排且成本極高。如何處理？", c1: "立即清理：保護生命", c2: "維持低碳：優先減緩氣候" },
+            1200: { step: "03/05", title: "海洋觀光兩難", text: "珊瑚礁觀光帶來經濟效益，但遊客會破壞生態。是否關閉保護區？", c1: "維持開放：促進在地經濟", c2: "全面關閉：給予大海喘息" },
+            1800: { step: "04/05", title: "深海採礦誘惑", text: "開採電動車電池金屬可加速能源轉型，但會永久毀滅海床。支持嗎？", c1: "支持開採：加速綠能革命", c2: "嚴格禁止：保護未知地貌" },
+            2500: { step: "05/05", title: "塑膠微粒政策", text: "全面禁塑會導致物價上漲與不便，不禁止則微粒將進入人類食物鏈。", c1: "逐步轉型：保護經濟穩定", c2: "強硬禁塑：守護後代健康" }
         };
 
-        let triggeredDepths = [];
+        let score = 0;
+        let triggered = [];
         const bgm = document.getElementById('bgm');
-        const audioBtn = document.getElementById('audio-toggle');
 
-        // 聲音控制邏輯
         function toggleAudio() {
-            if (bgm.paused) {
-                bgm.play();
-                audioBtn.innerText = "🔊 SOUND ON";
-            } else {
-                bgm.pause();
-                audioBtn.innerText = "🔇 SOUND OFF";
-            }
+            if (bgm.paused) { bgm.play(); document.getElementById('audio-ctrl').innerText = "🔊 音樂：開啟"; }
+            else { bgm.pause(); document.getElementById('audio-ctrl').innerText = "🔇 音樂：關閉"; }
         }
 
         window.addEventListener('scroll', () => {
             let scrollY = window.scrollY;
-            let depth = Math.floor(scrollY / 10); // 調整下潛比例
+            let depth = Math.floor(scrollY / 10);
             document.getElementById('meters').innerText = depth;
-
-            // [視覺引導] 背景位置隨捲動同步改變顏色
             document.getElementById('ocean-bg').style.backgroundPosition = `0 -${scrollY}px`;
 
             const label = document.getElementById('zone-label');
             if (depth < 200) label.innerText = "SUNLIGHT ZONE";
-            else if (depth < 700) {
-                label.innerText = "TWILIGHT ZONE";
-                label.style.color = "#00bcd4";
-            } else {
-                label.innerText = "MIDNIGHT ZONE";
-                label.style.color = "#555";
-            }
+            else if (depth < 700) label.innerText = "TWILIGHT ZONE";
+            else label.innerText = "MIDNIGHT ZONE";
 
-            [300, 800].forEach(d => {
-                if (depth >= d && !triggeredDepths.includes(d)) showQuiz(d);
+            [300, 700, 1200, 1800, 2500].forEach(d => {
+                if (depth >= d && !triggered.includes(d)) showQuiz(d);
             });
+
+            if (depth >= 3500 && triggered.length >= 5) showResults();
         });
 
         function showQuiz(d) {
-            triggeredDepths.push(d);
+            triggered.push(d);
             const data = quizData[d];
+            document.getElementById('quiz-step').innerText = `STEP ${data.step}`;
             document.getElementById('quiz-title').innerText = data.title;
             document.getElementById('quiz-text').innerText = data.text;
             
@@ -180,12 +181,12 @@
                 btn.innerText = txt;
                 btn.onclick = () => {
                     if (idx === 0) {
-                        // [視覺連動] 選擇破壞後效果：變色、混濁、生物消失
+                        score -= 10;
                         document.getElementById('ocean-bg').style.filter = "hue-rotate(90deg) brightness(50%) blur(10px)";
-                        document.getElementById('pollution-overlay').classList.add('active-pollution');
-                        document.getElementById('eco-system-sunlight').style.opacity = "0";
-                        document.getElementById('eco-system-sunlight').style.transform = "translateY(-100px)";
-                    }
+                        document.getElementById('particles').classList.add('active-pollution');
+                        document.getElementById('eco-system').style.opacity = "0";
+                        document.getElementById('trash-system').style.opacity = "1";
+                    } else { score += 10; }
                     document.getElementById('quiz-modal').style.display = 'none';
                     document.body.style.overflow = 'auto';
                 };
@@ -193,6 +194,26 @@
             });
             document.getElementById('quiz-modal').style.display = 'flex';
             document.body.style.overflow = 'hidden';
+        }
+
+        function showResults() {
+            document.getElementById('scroll-content').style.display = 'none';
+            document.getElementById('result-page').style.display = 'block';
+            window.scrollTo(0, 0);
+
+            let n, d, p, m, t;
+            if (score > 0) {
+                n = "感性生態守護者"; d = "你堅信萬物皆有其絕對價值，寧可慢下發展腳步，也不願讓生命成為進步的祭品。"; p = 28; m = "冷靜減碳家";
+                t = "實踐 SDG 12：在生活中優先選擇「海洋友善」標章海鮮，減少使用一次性塑膠產品。";
+            } else {
+                n = "冷靜減碳家"; d = "你擁有強大的大局觀。深知對抗氣候災難需要艱難的權衡，並願意在理性分析後承擔代價。"; p = 42; m = "感性生態守護者";
+                t = "實踐 SDG 13：支持國家能源轉型政策，並參與碳足跡追蹤與低碳生活的推廣。";
+            }
+            document.getElementById('personality-name').innerText = n;
+            document.getElementById('personality-desc').innerText = d;
+            document.getElementById('same-pct').innerText = p;
+            document.getElementById('best-match').innerText = m;
+            document.getElementById('takeaway-text').innerText = t;
         }
     </script>
 </body>
