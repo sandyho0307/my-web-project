@@ -110,6 +110,79 @@
             }
         });
     </script>
+<style>
+    /* 互動彈窗樣式 */
+    .dilemma-overlay {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        display: none; /* 預設隱藏 */
+        justify-content: center;
+        align-items: center;
+        z-index: 2000;
+        backdrop-filter: blur(5px);
+    }
+    .dilemma-card {
+        background: #1a1a1a;
+        padding: 40px;
+        border-radius: 20px;
+        border: 1px solid #00bcd4;
+        text-align: center;
+        max-width: 500px;
+    }
+    .btn-choice {
+        margin: 10px;
+        padding: 15px 30px;
+        transition: 0.3s;
+    }
+    /* 當環境變差時的濾鏡類別 */
+    .polluted {
+        filter: blur(3px) grayscale(40%) sepia(20%);
+        transition: 2s;
+    }
+</style>
 
+<div id="dilemma-modal" class="dilemma-overlay">
+    <div class="dilemma-card">
+        <h3 class="text-info mb-4">抉擇時刻：離岸風電開發</h3>
+        <p class="mb-4">為了達成減碳目標，政府計畫在此區興建風機。但這會干擾白海豚的迴聲定位，你支持開發嗎？</p>
+        <button class="btn btn-outline-info btn-choice" onclick="makeChoice('green')">支持綠能開發</button>
+        <button class="btn btn-outline-light btn-choice" onclick="makeChoice('nature')">優先保護棲地</button>
+    </div>
+</div>
+
+<script>
+    let hasTriggered = false; // 確保只觸發一次
+
+    window.addEventListener('scroll', function() {
+        let scrollY = window.scrollY;
+        let depth = Math.floor(scrollY / 5);
+        document.getElementById('meters').innerText = depth;
+
+        // 當潛到 300 公尺時跳出視窗
+        if (depth >= 300 && !hasTriggered) {
+            triggerDilemma();
+        }
+    });
+
+    function triggerDilemma() {
+        hasTriggered = true;
+        document.getElementById('dilemma-modal').style.display = 'flex';
+        document.body.style.overflow = 'hidden'; // 鎖定滾動
+    }
+
+    function makeChoice(choice) {
+        document.getElementById('dilemma-modal').style.display = 'none';
+        document.body.style.overflow = 'auto'; // 恢復滾動
+
+        if (choice === 'green') {
+            // 選擇開發：背景變混濁 (將濾鏡套用在滾動容器上)
+            document.querySelector('.scroll-wrapper').classList.add('polluted');
+            alert("你選擇了能源轉型，但附近的生物多樣性開始下降...");
+        } else {
+            alert("你守護了這片海洋的寧靜，但減碳進度陷入停滯。");
+        }
+    }
+</script>
 </body>
 </html>
