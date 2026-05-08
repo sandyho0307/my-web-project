@@ -11,23 +11,37 @@
         body {
             margin: 0; padding: 0;
             font-family: "Microsoft JhengHei", sans-serif;
+            /* 背景深度漸變：從淺藍到全黑 [cite: 14, 27-36] */
             background: linear-gradient(to bottom, #87CEEB 0%, #01579b 25%, #002147 50%, #000000 100%);
             color: white;
+            overflow-x: hidden;
         }
 
-        /* 包裹所有內容的容器，用來套用濾鏡 */
         .scroll-wrapper {
             width: 100%;
-            height: 6000px; /* 模擬深度 */
-            transition: filter 2s ease;
+            height: 6000px; 
+            transition: filter 2s ease, background-color 2s ease;
         }
 
-        /* 互動彈窗樣式 */
+        /* 沉浸式第一人稱視角窗  */
+        .submersible-window {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80vw; height: 60vh;
+            border: 15px solid rgba(255, 255, 255, 0.1);
+            border-radius: 40px;
+            box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.4);
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* 互動彈窗樣式 [cite: 23] */
         .dilemma-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.85);
-            display: none; /* 預設隱藏 */
+            display: none;
             justify-content: center; align-items: center;
             z-index: 3000;
             backdrop-filter: blur(8px);
@@ -38,30 +52,37 @@
         }
         .btn-choice { margin: 10px; padding: 12px 25px; transition: 0.3s; }
 
-        /* 深度計數器 */
         .depth-info {
             position: fixed; right: 40px; top: 50%;
             transform: translateY(-50%); z-index: 1001; text-align: right;
         }
 
-        /* 海洋物件動畫 */
-        .ocean-object { position: absolute; width: 150px; z-index: 50; }
-        @keyframes swim {
-            from { transform: translateX(0); }
-            to { transform: translateX(20px); }
+        /* 污染懸浮微粒層  */
+        #pollution-particles {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: radial-gradient(circle, #4b3a2b 2px, transparent 2px);
+            background-size: 80px 80px;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 999;
+            transition: opacity 2s ease;
         }
-        .swimming { animation: swim 3s ease-in-out infinite alternate; }
+        .active-pollution { opacity: 0.6 !important; animation: drift 20s linear infinite; }
+        @keyframes drift { from { background-position: 0 0; } to { background-position: 500px 1000px; } }
 
-        /* 污染後果動畫 (可用 JS 切換) */
-        @keyframes environmental-damage {
-            0% { filter: contrast(100%); }
-            50% { filter: contrast(150%) hue-rotate(90deg) blur(5px); }
-            100% { filter: grayscale(80%) blur(3px); }
-        }
-        .polluted-active { animation: environmental-damage 3s forwards; }
+        /* 海洋物件動畫  */
+        .ocean-object { position: absolute; width: 250px; z-index: 50; }
+        @keyframes swim { from { transform: translateX(0); } to { transform: translateX(30px); } }
+        .swimming { animation: swim 4s ease-in-out infinite alternate; }
+
+        section { height: 1200px; position: relative; }
     </style>
 </head>
 <body>
+
+    <div class="submersible-window"></div>
+    <div id="pollution-particles"></div>
 
     <div class="depth-info">
         <h2 id="meters" class="display-3 fw-bold">0</h2>
@@ -82,13 +103,19 @@
             <h1 class="display-1 fw-bold" data-aos="zoom-in">Dive into Dilemma</h1>
         </section>
 
-        <div class="ocean-object swimming" style="top: 1000px; left: 10%;" data-aos="fade-right">
-            <p>🐟 魚群</p>
-        </div>
+        <section>
+            <div class="ocean-object swimming" style="top: 200px; left: 10%;" data-aos="fade-right">
+                <img src="https://img.icons8.com/color/160/fish.png" alt="魚群">
+                <p class="text-center">健康的魚群</p>
+            </div>
+        </section>
         
-        <div class="ocean-object" style="top: 2500px; right: 10%;" data-aos="fade-left">
-            <p>🕸️ 廢棄漁網</p>
-        </div>
+        <section>
+            <div class="ocean-object" style="top: 500px; right: 10%;" data-aos="fade-left">
+                <img src="https://img.icons8.com/color/160/trash.png" alt="垃圾">
+                <p class="text-center">廢棄漁網與垃圾</p>
+            </div>
+        </section>
     </div>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
@@ -96,17 +123,16 @@
         AOS.init({ duration: 1200 });
 
         const dilemmas = {
-            200: { title: "深度 200m：能源與生態", text: "興建風機可減碳，但會干擾白海豚。支持嗎？", c1: "支持開發", c2: "保護棲地" },
-            500: { title: "深度 500m：幽靈漁網", text: "清理漁網需產生大量碳排。是否立即處理？", c1: "立即清理", c2: "優先減碳" },
-            800: { title: "深度 800m：深海採礦", text: "採礦有助電動車轉型，但會破壞海床。支持嗎？", c1: "支持轉型", c2: "守護深海" }
+            200: { title: "深度 200m：能源與生態", text: "政府計畫在此興建風機。這能增加綠能，但會傷害海洋生物。你支持嗎？ ", c1: "支持開發 (追求減碳)", c2: "優先保護 (守護生態)" },
+            500: { title: "深度 500m：垃圾處理", text: "海底發現大量塑膠垃圾。清理需耗費大量燃料產生碳排。你要清理嗎？", c1: "忍受碳排立即清理", c2: "維持低碳暫緩清理" },
+            800: { title: "深度 800m：資源開採", text: "此處蘊含豐富礦產。開採可帶動經濟但會破壞深海地貌。支持開採嗎？", c1: "支持經濟開採", c2: "禁止任何破壞" }
         };
 
-        let environmentalScore = 0;
+        let score = 0; 
         let triggeredDepths = [];
 
         window.addEventListener('scroll', function() {
-            let scrollY = window.scrollY;
-            let depth = Math.floor(scrollY / 5);
+            let depth = Math.floor(window.scrollY / 5);
             document.getElementById('meters').innerText = depth;
 
             [200, 500, 800].forEach(d => {
@@ -119,12 +145,10 @@
         function triggerDilemma(depth) {
             triggeredDepths.push(depth);
             const data = dilemmas[depth];
-            
             document.getElementById('modal-title').innerText = data.title;
             document.getElementById('modal-text').innerText = data.text;
             document.getElementById('choice1-btn').innerText = data.c1;
             document.getElementById('choice2-btn').innerText = data.c2;
-
             document.getElementById('dilemma-modal').style.display = 'flex';
             document.body.style.overflow = 'hidden';
         }
@@ -133,18 +157,18 @@
             document.getElementById('dilemma-modal').style.display = 'none';
             document.body.style.overflow = 'auto';
 
-            if (type === 'A') {
-                environmentalScore -= 10;
-                // 動態調整濾鏡：隨著分數變低，畫面越模糊且越灰
-                let blurVal = Math.abs(environmentalScore) / 5;
-                let grayVal = Math.abs(environmentalScore) * 2;
-                document.getElementById('main-content').style.filter = `blur(${blurVal}px) grayscale(${grayVal}%)`;
+            if (type === 'A') { // 選擇開發導向
+                score -= 10;
+                // 升級後的視覺後果：海水變色、變暗且變髒 
+                let hueVal = Math.abs(score) * 4; 
+                let brightnessVal = 100 - Math.abs(score);
+                document.getElementById('main-content').style.filter = `hue-rotate(${hueVal}deg) brightness(${brightnessVal}%) blur(2px)`;
+                // 開啟懸浮微粒效果
+                document.getElementById('pollution-particles').classList.add('active-pollution');
             } else {
-                environmentalScore += 10;
+                score += 10;
             }
-            console.log("當前加權分數:", environmentalScore);
         }
     </script>
 </body>
-</html>", environmentalScore);
-}
+</html>
