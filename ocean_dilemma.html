@@ -1,181 +1,150 @@
-<style>
-    /* 互動彈窗樣式 */
-    .dilemma-overlay {
-        position: fixed;
-        top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0, 0, 0, 0.8);
-        display: none; /* 預設隱藏 */
-        justify-content: center;
-        align-items: center;
-        z-index: 2000;
-        backdrop-filter: blur(5px);
-    }
-    .dilemma-card {
-        background: #1a1a1a;
-        padding: 40px;
-        border-radius: 20px;
-        border: 1px solid #00bcd4;
-        text-align: center;
-        max-width: 500px;
-    }
-    .btn-choice {
-        margin: 10px;
-        padding: 15px 30px;
-        transition: 0.3s;
-    }
-    /* 當環境變差時的濾鏡類別 */
-    .polluted {
-        filter: blur(3px) grayscale(40%) sepia(20%);
-        transition: 2s;
-    }
-</style>
-
-<div id="dilemma-modal" class="dilemma-overlay">
-    <div class="dilemma-card">
-        <h3 class="text-info mb-4">抉擇時刻：離岸風電開發</h3>
-        <p class="mb-4">為了達成減碳目標，政府計畫在此區興建風機。但這會干擾白海豚的迴聲定位，你支持開發嗎？</p>
-        <button class="btn btn-outline-info btn-choice" onclick="makeChoice('green')">支持綠能開發</button>
-        <button class="btn btn-outline-light btn-choice" onclick="makeChoice('nature')">優先保護棲地</button>
-    </div>
-</div>
-
-<script>
-    let hasTriggered = false; // 確保只觸發一次
-
-    window.addEventListener('scroll', function() {
-        let scrollY = window.scrollY;
-        let depth = Math.floor(scrollY / 5);
-        document.getElementById('meters').innerText = depth;
-
-        // 當潛到 300 公尺時跳出視窗
-        if (depth >= 300 && !hasTriggered) {
-            triggerDilemma();
-        }
-    });
-
-    function triggerDilemma() {
-        hasTriggered = true;
-        document.getElementById('dilemma-modal').style.display = 'flex';
-        document.body.style.overflow = 'hidden'; // 鎖定滾動
-    }
-
-    function makeChoice(choice) {
-        document.getElementById('dilemma-modal').style.display = 'none';
-        document.body.style.overflow = 'auto'; // 恢復滾動
-
-        if (choice === 'green') {
-            // 選擇開發：背景變混濁 (將濾鏡套用在滾動容器上)
-            document.querySelector('.scroll-wrapper').classList.add('polluted');
-            alert("你選擇了能源轉型，但附近的生物多樣性開始下降...");
-        } else {
-            alert("你守護了這片海洋的寧靜，但減碳進度陷入停滯。");
-        }
-    }
-</script>
-<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-<script>
-  AOS.init({ duration: 1200 }); // 初始化動畫時間
-</script>
-<style>
-  .ocean-object {
-    position: absolute;
-    width: 150px;
-    z-index: 50;
-  }
-  /* 讓生物看起來在游動的微動畫 */
-  @keyframes swim {
-    from { transform: translateX(0); }
-    to { transform: translateX(20px); }
-  }
-  .swimming { animation: swim 3s ease-in-out infinite alternate; }
-</style>
-
-<section class="content-section" style="height: 800px;">
-    <div class="ocean-object swimming" style="top: 20%; left: 10%;" data-aos="fade-right">
-        <img src="fish.png" alt="生物" style="width: 100%;">
-    </div>
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dive into Dilemma - 海洋兩難抉擇</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     
-    <div class="ocean-object" style="top: 60%; right: 10%;" data-aos="fade-left">
-        <img src="trash.png" alt="污染源" style="width: 120px;">
-    </div>
-</section>
-/* 嚴重的後果動畫 */
-@keyframes environmental-damage {
-    0% { filter: contrast(100%); }
-    50% { filter: contrast(150%) hue-rotate(90deg) blur(5px); }
-    100% { filter: grayscale(80%) blur(3px); }
-}
-
-.polluted-active {
-    animation: environmental-damage 3s forwards;
-}
-// 1. 定義題目資料庫
-const dilemmas = {
-    200: {
-        title: "深度 200m：能源與生態的拉鋸",
-        text: "政府計畫在此興建離岸風電以利減碳，但這會干擾白海豚的迴聲定位。你支持嗎？",
-        choice1: "支持開發 (綠能優先)",
-        choice2: "優先保護 (生物多樣性)"
-    },
-    500: {
-        title: "深度 500m：深海漁網的遺落",
-        text: "發現大量廢棄幽靈漁網。若要立即清理需要動用大量燃料且產生碳排，你怎麼做？",
-        choice1: "忍受碳排 (立即清理)",
-        choice2: "靜觀其變 (優先減碳)"
-    },
-    800: {
-        title: "深度 800m：深海採礦爭議",
-        text: "此處蘊含電動車電池所需的稀有金屬。開採能加速交通轉型，但會永久破壞深海生態。你支持嗎？",
-        choice1: "支持開採 (工業轉型)",
-        choice2: "守護深海 (禁止開發)"
-    }
-};
-
-let environmentalScore = 0; // 用來記錄選擇傾向
-let triggeredDepths = []; // 記錄已觸發過的深度
-
-window.addEventListener('scroll', function() {
-    let scrollY = window.scrollY;
-    let depth = Math.floor(scrollY / 5);
-    document.getElementById('meters').innerText = depth;
-
-    // 檢查是否到達設定的深度 200, 500, 800
-    [200, 500, 800].forEach(d => {
-        if (depth >= d && !triggeredDepths.includes(d)) {
-            triggerDilemma(d);
+    <style>
+        body {
+            margin: 0; padding: 0;
+            font-family: "Microsoft JhengHei", sans-serif;
+            background: linear-gradient(to bottom, #87CEEB 0%, #01579b 25%, #002147 50%, #000000 100%);
+            color: white;
         }
-    });
-});
 
-function triggerDilemma(depth) {
-    triggeredDepths.push(depth);
-    const data = dilemmas[depth];
-    
-    // 更新彈窗內容
-    const modal = document.getElementById('dilemma-modal');
-    modal.querySelector('h3').innerText = data.title;
-    modal.querySelector('p').innerText = data.text;
-    modal.querySelectorAll('.btn-choice')[0].innerText = data.choice1;
-    modal.querySelectorAll('.btn-choice')[1].innerText = data.choice2;
+        /* 包裹所有內容的容器，用來套用濾鏡 */
+        .scroll-wrapper {
+            width: 100%;
+            height: 6000px; /* 模擬深度 */
+            transition: filter 2s ease;
+        }
 
-    modal.style.display = 'flex';
-    document.body.style.overflow = 'hidden'; // 暫停捲動
-}
+        /* 互動彈窗樣式 */
+        .dilemma-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: none; /* 預設隱藏 */
+            justify-content: center; align-items: center;
+            z-index: 3000;
+            backdrop-filter: blur(8px);
+        }
+        .dilemma-card {
+            background: #1a1a1a; padding: 40px; border-radius: 20px;
+            border: 1px solid #00bcd4; text-align: center; max-width: 600px;
+        }
+        .btn-choice { margin: 10px; padding: 12px 25px; transition: 0.3s; }
 
-function makeChoice(choiceType) {
-    document.getElementById('dilemma-modal').style.display = 'none';
-    document.body.style.overflow = 'auto'; // 恢復捲動
+        /* 深度計數器 */
+        .depth-info {
+            position: fixed; right: 40px; top: 50%;
+            transform: translateY(-50%); z-index: 1001; text-align: right;
+        }
 
-    if (choiceType === 'green') {
-        // 選擇工業/開發選項：增加視覺污染感
-        environmentalScore -= 10;
-        document.querySelector('.scroll-wrapper').style.filter = `blur(${Math.abs(environmentalScore)/5}px) grayscale(${Math.abs(environmentalScore)}%)`;
-    } else {
-        // 選擇保育選項
-        environmentalScore += 10;
-        // 可以讓畫面變清澈或不變
-    }
-    console.log("目前環保加權分數:", environmentalScore);
+        /* 海洋物件動畫 */
+        .ocean-object { position: absolute; width: 150px; z-index: 50; }
+        @keyframes swim {
+            from { transform: translateX(0); }
+            to { transform: translateX(20px); }
+        }
+        .swimming { animation: swim 3s ease-in-out infinite alternate; }
+
+        /* 污染後果動畫 (可用 JS 切換) */
+        @keyframes environmental-damage {
+            0% { filter: contrast(100%); }
+            50% { filter: contrast(150%) hue-rotate(90deg) blur(5px); }
+            100% { filter: grayscale(80%) blur(3px); }
+        }
+        .polluted-active { animation: environmental-damage 3s forwards; }
+    </style>
+</head>
+<body>
+
+    <div class="depth-info">
+        <h2 id="meters" class="display-3 fw-bold">0</h2>
+        <p>METERS</p>
+    </div>
+
+    <div id="dilemma-modal" class="dilemma-overlay">
+        <div class="dilemma-card">
+            <h3 class="text-info mb-4" id="modal-title">抉擇時刻</h3>
+            <p class="mb-4" id="modal-text">文字載入中...</p>
+            <button class="btn btn-outline-info btn-choice" id="choice1-btn" onclick="makeChoice('A')">選項1</button>
+            <button class="btn btn-outline-light btn-choice" id="choice2-btn" onclick="makeChoice('B')">選項2</button>
+        </div>
+    </div>
+
+    <div class="scroll-wrapper" id="main-content">
+        <section style="height: 100vh; display: flex; justify-content: center; align-items: center;">
+            <h1 class="display-1 fw-bold" data-aos="zoom-in">Dive into Dilemma</h1>
+        </section>
+
+        <div class="ocean-object swimming" style="top: 1000px; left: 10%;" data-aos="fade-right">
+            <p>🐟 魚群</p>
+        </div>
+        
+        <div class="ocean-object" style="top: 2500px; right: 10%;" data-aos="fade-left">
+            <p>🕸️ 廢棄漁網</p>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 1200 });
+
+        const dilemmas = {
+            200: { title: "深度 200m：能源與生態", text: "興建風機可減碳，但會干擾白海豚。支持嗎？", c1: "支持開發", c2: "保護棲地" },
+            500: { title: "深度 500m：幽靈漁網", text: "清理漁網需產生大量碳排。是否立即處理？", c1: "立即清理", c2: "優先減碳" },
+            800: { title: "深度 800m：深海採礦", text: "採礦有助電動車轉型，但會破壞海床。支持嗎？", c1: "支持轉型", c2: "守護深海" }
+        };
+
+        let environmentalScore = 0;
+        let triggeredDepths = [];
+
+        window.addEventListener('scroll', function() {
+            let scrollY = window.scrollY;
+            let depth = Math.floor(scrollY / 5);
+            document.getElementById('meters').innerText = depth;
+
+            [200, 500, 800].forEach(d => {
+                if (depth >= d && !triggeredDepths.includes(d)) {
+                    triggerDilemma(d);
+                }
+            });
+        });
+
+        function triggerDilemma(depth) {
+            triggeredDepths.push(depth);
+            const data = dilemmas[depth];
+            
+            document.getElementById('modal-title').innerText = data.title;
+            document.getElementById('modal-text').innerText = data.text;
+            document.getElementById('choice1-btn').innerText = data.c1;
+            document.getElementById('choice2-btn').innerText = data.c2;
+
+            document.getElementById('dilemma-modal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function makeChoice(type) {
+            document.getElementById('dilemma-modal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+
+            if (type === 'A') {
+                environmentalScore -= 10;
+                // 動態調整濾鏡：隨著分數變低，畫面越模糊且越灰
+                let blurVal = Math.abs(environmentalScore) / 5;
+                let grayVal = Math.abs(environmentalScore) * 2;
+                document.getElementById('main-content').style.filter = `blur(${blurVal}px) grayscale(${grayVal}%)`;
+            } else {
+                environmentalScore += 10;
+            }
+            console.log("當前加權分數:", environmentalScore);
+        }
+    </script>
+</body>
+</html>", environmentalScore);
 }
