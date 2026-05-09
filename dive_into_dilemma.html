@@ -3,46 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dive into Dilemma | 海洋行動實驗室</title>
+    <title>Dive into Dilemma | 海洋性格實驗室</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         :root { --accent: #00bcd4; }
-        body { margin: 0; padding: 0; background: #000; color: white; font-family: "Inter", "Microsoft JhengHei", sans-serif; overflow: hidden; }
+        body { margin: 0; padding: 0; background: #000; color: white; font-family: "Microsoft JhengHei", sans-serif; overflow: hidden; }
 
-        /* 啟動覆蓋層 - 確保 z-index 最高 */
+        /* 啟動層：確保層級最高且覆蓋全螢幕 */
         #start-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: radial-gradient(circle, #1a3a5a 0%, #000 100%); 
-            z-index: 10000; /* 最高層級 */
-            display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
-            cursor: pointer;
+            z-index: 10000; display: flex; flex-direction: column; 
+            justify-content: center; align-items: center; cursor: pointer;
         }
 
         #ocean-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(to bottom, #87CEEB 0%, #01579b 20%, #002147 50%, #000 85%);
-            background-size: 100% 18000px; z-index: -2; transition: all 1.5s ease;
+            background-size: 100% 15000px; z-index: -2; transition: all 1s ease;
         }
 
+        /* 污染懸浮物 */
         #particles {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-image: radial-gradient(circle, #4b3a2b 2px, transparent 2px);
             background-size: 60px 60px; opacity: 0; pointer-events: none; z-index: -1;
             transition: opacity 2s ease;
         }
-        .active-pollution { opacity: 0.8 !important; animation: drift 15s linear infinite; }
+        .active-pollution { opacity: 0.8 !important; }
 
         .submersible-window {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             width: 88vw; height: 68vh; border: 4px solid rgba(255,255,255,0.1);
-            border-radius: 60px; box-shadow: 0 0 0 3000px rgba(0,0,0,0.7);
+            border-radius: 60px; box-shadow: 0 0 0 2000px rgba(0,0,0,0.7);
             pointer-events: none; z-index: 1000;
         }
 
-        .ocean-life { position: absolute; font-size: 2.5rem; pointer-events: none; transition: all 2s ease; z-index: 10; }
+        /* 豐富生態 - 魚群 */
+        .ocean-life { position: absolute; font-size: 2.5rem; pointer-events: none; transition: all 1s ease; z-index: 10; }
         .swimming { animation: swim 6s infinite alternate ease-in-out; }
         @keyframes swim { from { transform: translate(0,0); } to { transform: translate(40px, 20px); } }
 
+        /* 對話框 UI */
         .dilemma-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.9); display: none;
@@ -55,27 +57,35 @@
         }
         .choice-btn {
             width: 100%; margin-top: 15px; padding: 18px; border-radius: 18px;
-            border: 1px solid rgba(255,255,255,0.2); background: transparent; color: white;
+            border: 1px solid rgba(255,255,255,0.3); background: transparent; color: white;
             transition: 0.3s; font-weight: bold; cursor: pointer;
         }
         .choice-btn:hover { background: white; color: black; }
 
-        .scroll-space { width: 100%; height: 20000px; position: relative; }
+        /* 確保捲動長度高達 15000px */
+        .scroll-space { width: 100%; height: 15000px; position: relative; }
         .depth-gauge { position: fixed; right: 50px; top: 50%; transform: translateY(-50%); z-index: 1001; text-align: right; }
 
-        #result-screen { display: none; background: #000; min-height: 100vh; position: fixed; top:0; left:0; width:100%; z-index: 9999; padding: 50px; overflow-y: auto; }
-        .result-card { background: linear-gradient(135deg, #0f172a, #1e3a8a); padding: 50px; border-radius: 40px; max-width: 600px; margin: auto; border: 1px solid var(--accent); }
+        /* 結算頁面 */
+        #result-screen { 
+            display: none; position: fixed; top:0; left:0; width:100%; height: 100%;
+            background: #000; z-index: 9999; padding: 50px; overflow-y: auto; 
+        }
+        .result-card { 
+            background: linear-gradient(135deg, #0f172a, #1e3a8a); padding: 50px; 
+            border-radius: 40px; max-width: 600px; margin: auto; border: 1px solid var(--accent); 
+        }
     </style>
 </head>
 <body>
 
     <div id="start-overlay" onclick="beginAdventure()">
         <h1 class="display-3 fw-bold mb-4">Dive into Dilemma</h1>
-        <p class="mb-5 opacity-75">SDG 14 海洋性格行動實驗室</p>
-        <div class="btn btn-info btn-lg rounded-pill px-5 py-3">點擊任意處開始探險</div>
+        <p class="mb-5 h4 text-info">SDG 14 海洋性格行動實驗室</p>
+        <div class="btn btn-info btn-lg rounded-pill px-5 py-3 fw-bold">點擊啟動 (播放海浪音效)</div>
     </div>
 
-    <audio id="ocean-bgm" loop>
+    <audio id="ocean-bgm" loop preload="auto">
         <source src="https://www.soundjay.com/nature/ocean-wave-1.mp3" type="audio/mpeg">
     </audio>
 
@@ -99,19 +109,19 @@
 
     <div class="scroll-space" id="main-content">
         <section style="height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-            <h1 class="display-2 fw-bold mb-4">潛入海洋深處...</h1>
-            <p class="lead opacity-50">請向下捲動滑鼠</p>
+            <h1 class="display-2 fw-bold mb-4">潛入海洋...</h1>
+            <p class="h4 opacity-50">請向下捲動滑鼠</p>
         </section>
     </div>
 
     <div id="result-screen">
         <div class="result-card text-center">
             <h5 class="opacity-50 mb-3 tracking-widest">FINAL PROFILE</h5>
-            <h1 id="personality-name" class="display-4 fw-bold mb-4 text-info"></h1>
+            <h1 id="personality-name" class="display-4 fw-bold mb-4 text-info">海洋領袖</h1>
             <p id="personality-desc" class="lead mb-5 px-3"></p>
             <div class="row g-3 mb-5 px-3">
-                <div class="col-6 bg-white bg-opacity-10 py-3 rounded-4">👥 <span id="same-pct"></span>% 同類人</div>
-                <div class="col-6 bg-white bg-opacity-10 py-3 rounded-4">🤝 夥伴：<span id="best-match"></span></div>
+                <div class="col-6 bg-white bg-opacity-10 py-3 rounded-4">👥 <span id="same-pct">0</span>% 同類人</div>
+                <div class="col-6 bg-white bg-opacity-10 py-3 rounded-4">🤝 夥伴：<span id="best-match">分析師</span></div>
             </div>
             <div class="p-4 bg-white text-dark rounded-4 text-start">
                 <h6 class="fw-bold mb-2">📍 Takeaway 行動指南</h6>
@@ -125,13 +135,14 @@
         const bgm = document.getElementById('ocean-bgm');
         const main = document.getElementById('main-content');
         
+        // 1. 生成大量生物
         function generateEco() {
-            const species = ['🐟', '🐠', '🐡', '🐙', '🐢', '🦐', '🐬', '🐳', '🐚', '🦀', '🦈', '🌿'];
+            const species = ['🐟', '🐠', '🐡', '🐙', '🐢', '🦐', '🐬', '🐳', '🦀', '🦈', '🌿'];
             for(let i=0; i<100; i++) {
                 const el = document.createElement('div');
                 el.className = 'ocean-life ' + (i % 2 === 0 ? 'swimming' : '');
                 el.innerText = species[Math.floor(Math.random() * species.length)];
-                el.style.top = (Math.random() * 12000 + 1000) + 'px';
+                el.style.top = (Math.random() * 13000 + 1000) + 'px';
                 el.style.left = Math.random() * 85 + 5 + '%';
                 el.style.opacity = Math.random() * 0.7 + 0.3;
                 main.appendChild(el);
@@ -139,27 +150,30 @@
         }
         generateEco();
 
+        // 2. 啟動探險 (修復聲音與解鎖滾動)
         function beginAdventure() {
-            // 隱藏啟動層並解鎖捲動
             document.getElementById('start-overlay').style.display = 'none';
             document.body.style.overflow = 'auto';
-            // 播放聲音
-            bgm.play().catch(e => alert("請手動開啟聲音"));
+            bgm.volume = 0.5;
+            bgm.play().catch(() => console.log("音訊播放受阻"));
         }
 
+        // 3. 真實情境題目 (SDG 12, 13, 14)
         const quizData = {
             500: { step: "01/05", title: "風電與白海豚 (SDG 13)", text: "興建離岸風機有助於能源轉型，但噪音會震碎白海豚的聽覺。你支持立即開工嗎？", c1: "支持：忍受代價達成減碳", c2: "反對：優先守護生物多樣性" },
             1500: { step: "02/05", title: "幽靈漁網代價 (SDG 14)", text: "海中積累大量廢棄漁網。清理需消耗大量高碳排燃料。你會出動清理船嗎？", c1: "行動：不計成本清除海洋殺手", c2: "維持：優先維護低碳排現狀" },
-            3000: { step: "03/05", title: "責任消費抉擇 (SDG 12)", text: "超市裡有永續標章但昂貴的海鮮，以及便宜但來源不明的海鮮。你會買？", c1: "永續：堅持選購認證產品", c2: "現實：優先節省家庭開支" },
-            5000: { step: "04/05", title: "深海採礦爭議", text: "電動車需要深海金屬，但採礦會毀滅深海。支持許可嗎？", c1: "支持：加速全球電動化減碳", c2: "禁止：保護人類最後的荒野" },
-            7000: { step: "05/05", title: "塑膠微粒災難", text: "全面禁塑會造成生活巨變。你支持立即推動禁令嗎？", c1: "立即：推動全民減塑生活", c2: "穩健：先維持經濟穩定再轉型" }
+            3500: { step: "03/05", title: "責任消費抉擇 (SDG 12)", text: "超市裡有永續標章但昂貴的海鮮，以及便宜但來源不明的海鮮。你會買？", c1: "永續：堅持選購認證產品", c2: "現實：優先節省家庭開支" },
+            5500: { step: "04/05", title: "深海採礦爭議", text: "電動車需要深海金屬，但採礦會毀滅深海。支持許可嗎？", c1: "支持：加速全球電動化減碳", c2: "禁止：保護人類最後的荒野" },
+            7500: { step: "05/05", title: "塑膠微粒災難", text: "全面禁塑會造成生活巨變。你支持立即推動禁令嗎？", c1: "立即：推動全民減塑生活", c2: "穩健：先維持經濟穩定再轉型" }
         };
 
-        let score = 0, triggered = [];
+        let score = 0;
+        let triggered = [];
 
+        // 4. 滾動監聽與深度計
         window.addEventListener('scroll', () => {
             let scrollY = window.scrollY;
-            let depth = Math.floor(scrollY / 15); // 每 15px 算 1M
+            let depth = Math.floor(scrollY / 15);
             document.getElementById('meters').innerText = depth;
             document.getElementById('ocean-bg').style.backgroundPosition = `0 -${scrollY}px`;
 
@@ -168,12 +182,12 @@
             else if (depth < 800) label.innerText = "TWILIGHT ZONE";
             else label.innerText = "MIDNIGHT ZONE";
 
+            // 觸發問答
             Object.keys(quizData).forEach(d => {
-                if (depth >= d && !triggered.includes(d)) showQuiz(d);
+                if (depth >= d && !triggered.includes(d)) {
+                    showQuiz(d);
+                }
             });
-
-            // 結算點設定在最後一題之後 (scrollY 約 13500px 左右)
-            if (scrollY >= 13500 && triggered.length >= 5) showResults();
         });
 
         function showQuiz(d) {
@@ -194,14 +208,16 @@
                         score -= 5;
                         document.getElementById('ocean-bg').style.filter = "hue-rotate(90deg) brightness(40%) blur(15px)";
                         document.getElementById('particles').classList.add('active-pollution');
-                        document.querySelectorAll('.ocean-life').forEach(o => o.style.opacity = "0");
                     } else { 
                         score += 5; 
-                        document.getElementById('ocean-bg').style.filter = "none";
-                        document.querySelectorAll('.ocean-life').forEach(o => o.style.opacity = "0.7");
                     }
                     document.getElementById('quiz-modal').style.display = 'none';
                     document.body.style.overflow = 'auto';
+
+                    // 如果做完最後一題，直接觸發結果
+                    if (triggered.length === 5) {
+                        setTimeout(showResults, 1500);
+                    }
                 };
                 container.appendChild(btn);
             });
@@ -209,16 +225,23 @@
             document.body.style.overflow = 'hidden';
         }
 
+        // 5. 性格小卡結算
         function showResults() {
+            window.scrollTo(0, 0);
             document.getElementById('result-screen').style.display = 'block';
             document.body.style.overflow = 'hidden';
+
             let n, d, p, m, t;
             if (score > 0) {
-                n = "感性生態守護者"; d = "你堅信生命的絕對價值高於商業利益，願意守護海洋最純粹的平靜。"; p = 32; m = "冷靜減碳家";
-                t = "落實 SDG 14：選擇 MSC 認證海鮮，減少塑膠使用。";
+                n = "感性生態守護者"; 
+                d = "你堅信生命的絕對價值高於商業利益。在權衡中，你寧願慢下腳步，也決不讓生命成為進步的祭品。"; 
+                p = 32; m = "冷靜減碳家";
+                t = "落實 SDG 14：選擇 MSC 永續認證海鮮，減少塑膠使用，給予海洋修復的空間。";
             } else {
-                n = "冷靜減碳家"; d = "你擁有強大的理性思維。明白對抗氣候災難(SDG 13)需要必要的權衡。"; p = 46; m = "感性生態守護者";
-                t = "落實 SDG 13：支持能源轉型政策，關注低碳生活的推廣。";
+                n = "冷靜減碳家"; 
+                d = "你擁有強大的理性思維。明白對抗氣候災難(SDG 13)需要艱難的權衡。你願意在理性分析後承擔代價。"; 
+                p = 46; m = "感性生態守護者";
+                t = "落實 SDG 13：支持能源轉型政策，關注低碳生活的推廣與技術革新。";
             }
             document.getElementById('personality-name').innerText = n;
             document.getElementById('personality-desc').innerText = d;
