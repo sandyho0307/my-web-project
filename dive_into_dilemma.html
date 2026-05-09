@@ -3,85 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dive into Dilemma | 海洋行動實驗室</title>
+    <title>Dive into Dilemma | 海洋性格行動實驗室</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
-        :root { --accent: #00bcd4; }
+        :root { --accent: #00bcd4; --danger: #ff4d4d; }
         body { margin: 0; padding: 0; background: #000; color: white; font-family: "Inter", "Microsoft JhengHei", sans-serif; overflow: hidden; }
 
-        /* 啟動覆蓋層：解決聲音播放權限問題 */
+        /* 啟動覆蓋層：確保聲音播放與互動開始 */
         #start-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 10, 20, 0.95); z-index: 9999;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            background: radial-gradient(circle, #1a3a5a 0%, #000 100%); z-index: 9999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
         }
 
         /* 深度漸變背景層 */
         #ocean-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(to bottom, #87CEEB 0%, #01579b 20%, #002147 50%, #000 80%);
-            background-size: 100% 15000px; z-index: -2; transition: all 1.5s ease;
+            background-size: 100% 18000px; z-index: -2; transition: all 1.5s ease;
         }
 
-        /* 污染微粒系統 */
+        /* 懸浮污染微粒 */
         #particles {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-image: radial-gradient(circle, #4b3a2b 2px, transparent 2px);
-            background-size: 60px 60px; opacity: 0; pointer-events: none; z-index: -1;
+            background-size: 45px 45px; opacity: 0; pointer-events: none; z-index: -1;
             transition: opacity 2s ease;
         }
-        .active-pollution { opacity: 0.8 !important; animation: drift 15s linear infinite; }
+        .active-pollution { opacity: 0.8 !important; animation: drift 12s linear infinite; }
+        @keyframes drift { from { background-position: 0 0; } to { background-position: 500px 1000px; } }
 
         /* 探測器視窗 */
         .submersible-window {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 88vw; height: 68vh; border: 2px solid rgba(255,255,255,0.1);
-            border-radius: 60px; box-shadow: 0 0 0 2000px rgba(0,0,0,0.7);
+            width: 90vw; height: 70vh; border: 4px solid rgba(255,255,255,0.1);
+            border-radius: 60px; box-shadow: 0 0 0 3000px rgba(0,0,0,0.7);
             pointer-events: none; z-index: 1000;
         }
 
-        /* 開心水族箱風格：豐富生物層 */
-        .ocean-life { position: absolute; pointer-events: none; transition: all 2s ease; z-index: 10; }
-        .fish-group img { width: 50px; margin: 15px; animation: swim 4s infinite alternate; }
-        @keyframes swim { from { transform: translate(0,0); } to { transform: translate(40px, 20px); } }
-        @keyframes drift { from { background-position: 0 0; } to { background-position: 500px 1000px; } }
+        /* 豐富生態物件 - 開心水族箱風格 */
+        .ocean-life { position: absolute; font-size: 2.5rem; pointer-events: none; transition: all 2s ease; z-index: 10; }
+        .swimming { animation: swim 6s infinite alternate ease-in-out; }
+        @keyframes swim { from { transform: translate(0,0); } to { transform: translate(60px, 30px); } }
 
         /* 問答卡片 UI */
         .dilemma-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.85); display: none;
+            background: rgba(0, 0, 0, 0.9); display: none;
             justify-content: center; align-items: center; z-index: 3000;
             backdrop-filter: blur(25px);
         }
         .quiz-card {
-            background: rgba(20, 20, 20, 0.95); padding: 50px; border-radius: 40px;
-            border: 1px solid var(--accent); text-align: center; max-width: 650px;
+            background: rgba(15, 20, 30, 0.95); padding: 50px; border-radius: 40px;
+            border: 2px solid var(--accent); text-align: center; max-width: 650px;
         }
         .choice-btn {
-            width: 100%; margin-top: 15px; padding: 20px; border-radius: 20px;
+            width: 100%; margin-top: 15px; padding: 20px; border-radius: 18px;
             border: 1px solid rgba(255,255,255,0.2); background: transparent; color: white;
-            transition: 0.3s ease; font-weight: bold;
+            transition: 0.3s; font-weight: bold;
         }
         .choice-btn:hover { background: white; color: black; transform: scale(1.02); }
 
-        /* 捲動高度與儀表板 */
-        .scroll-wrapper { width: 100%; height: 15000px; position: relative; }
+        .scroll-space { width: 100%; height: 18000px; position: relative; }
         .depth-gauge { position: fixed; right: 50px; top: 50%; transform: translateY(-50%); z-index: 1001; text-align: right; }
 
         /* 結算頁面 */
-        #result-page { display: none; background: #000; min-height: 100vh; position: fixed; top:0; left:0; width:100%; z-index: 9999; padding: 50px; overflow-y: auto; }
-        .result-card { background: linear-gradient(135deg, #1e3a8a, #1e40af); padding: 50px; border-radius: 40px; max-width: 600px; margin: auto; }
+        #result-screen { display: none; background: #000; min-height: 100vh; position: fixed; top:0; left:0; width:100%; z-index: 9999; padding: 50px; overflow-y: auto; }
+        .result-card { background: linear-gradient(135deg, #0f172a, #1e3a8a); padding: 50px; border-radius: 40px; max-width: 600px; margin: auto; border: 1px solid var(--accent); box-shadow: 0 0 50px rgba(0,188,212,0.3); }
     </style>
 </head>
 <body>
 
-    <div id="start-overlay" onclick="startExperience()">
-        <h1 class="display-3 fw-bold mb-4">Dive into Dilemma</h1>
-        <button class="btn btn-info btn-lg rounded-pill px-5 py-3">點擊開啟探險 (音樂隨之啟動)</button>
+    <div id="start-overlay" onclick="beginAdventure()">
+        <h1 class="display-2 fw-bold mb-4 text-info">Dive into Dilemma</h1>
+        <p class="lead mb-5 opacity-75">SDG 14 海洋性格行動實驗室</p>
+        <button class="btn btn-outline-info btn-lg rounded-pill px-5 py-3">點擊啟動探險 (開啟音樂)</button>
     </div>
 
-    <audio id="bgm" loop>
+    <audio id="ocean-bgm" loop>
         <source src="https://www.soundjay.com/nature/ocean-wave-1.mp3" type="audio/mpeg">
     </audio>
 
@@ -90,145 +89,35 @@
     <div class="submersible-window"></div>
 
     <div class="depth-gauge">
-        <h1 class="display-2 fw-bold mb-0 text-info"><span id="meters">0</span>M</h1>
-        <p class="h5 opacity-50" id="zone-label">SUNLIGHT ZONE</p>
+        <h1 class="display-1 fw-bold mb-0 text-info"><span id="meters">0</span>M</h1>
+        <p class="h4 opacity-50" id="zone-label">SUNLIGHT ZONE</p>
     </div>
 
     <div id="quiz-modal" class="dilemma-overlay">
         <div class="quiz-card">
-            <h6 id="quiz-step" class="text-info mb-2 small tracking-widest">REALITY ANALYSIS</h6>
+            <h6 id="quiz-step" class="text-info mb-2 small tracking-widest">ACTUAL SITUATION</h6>
             <h2 id="quiz-title" class="mb-4 fw-bold"></h2>
             <p id="quiz-text" class="lead mb-5 opacity-75"></p>
             <div id="choices-container"></div>
         </div>
     </div>
 
-    <div class="scroll-wrapper" id="main-content">
-        <section style="height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-            <h1 class="display-1 fw-bold mb-4">Dive into Dilemma</h1>
+    <div class="scroll-space" id="main-content">
+        <section style="height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+            <h1 class="display-2 fw-bold mb-4">Dive into Dilemma</h1>
             <p class="lead">往下捲動潛入深海</p>
+            <div class="mt-5 opacity-25">向下捲動 ↓</div>
         </section>
-
-        <div id="eco-1" class="ocean-life fish-group" style="top: 1500px; left: 10%;">
-            <img src="https://img.icons8.com/color/96/fish.png"><img src="https://img.icons8.com/color/96/clown-fish.png">
-            <br><img src="https://img.icons8.com/color/96/angelfish.png"><img src="https://img.icons8.com/color/96/fish.png">
         </div>
 
-        <div id="eco-2" class="ocean-life" style="top: 3000px; right: 15%;">
-            <img src="https://img.icons8.com/color/160/sea-turtle.png" style="width: 150px;">
-            <p class="text-center small opacity-50">GREEN TURTLE</p>
-        </div>
-
-        <div id="trash-item" class="ocean-life" style="top: 5000px; left: 10%; opacity: 0;">
-            <img src="https://img.icons8.com/color/160/trash.png" style="width: 250px;">
-            <p class="text-danger fw-bold">MARINE PLASTIC POLLUTION</p>
-        </div>
-    </div>
-
-    <div id="result-page">
+    <div id="result-screen">
         <div class="result-card text-center">
-            <h5 class="opacity-50 mb-3">OCEAN GUARDIAN PROFILE</h5>
-            <h1 id="personality-name" class="display-4 fw-bold mb-4"></h1>
-            <p id="personality-desc" class="lead mb-5"></p>
-            <div class="row g-3 mb-5 px-4">
+            <h5 class="opacity-50 mb-3 tracking-widest">FINAL PROFILE</h5>
+            <h1 id="personality-name" class="display-4 fw-bold mb-4 text-info"></h1>
+            <p id="personality-desc" class="lead mb-5 px-3"></p>
+            <div class="row g-3 mb-5 px-3">
                 <div class="col-6 bg-white bg-opacity-10 py-3 rounded-4">👥 <span id="same-pct"></span>% 同類人</div>
-                <div class="col-6 bg-white bg-opacity-10 py-3 rounded-4">🤝 夥伴：<span id="best-match"></span></div>
+                <div class="col-6 bg-white bg-opacity-10 py-3 rounded-4">🤝 最佳夥伴：<span id="best-match"></span></div>
             </div>
-            <div class="p-4 bg-white text-dark rounded-4 text-start">
-                <h6 class="fw-bold mb-2">📍 Takeaway 行動指南 (SDG Action)</h6>
-                <p id="takeaway-text" class="small mb-0"></p>
-            </div>
-            <button class="btn btn-outline-light mt-5 rounded-pill px-5 py-3" onclick="location.reload()">重新探索海洋</button>
-        </div>
-    </div>
-
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-        AOS.init();
-        
-        const quizData = {
-            400: { step: "01/05", title: "離岸風電噪音 (SDG 13)", text: "施工噪音會震碎鯨豚聽覺，但風場能提供大量綠能減少碳排。支持立即施工嗎？", c1: "支持：忍受代價以達成減碳", c2: "反對：優先守護生物多樣性" },
-            1200: { step: "02/05", title: "幽靈漁網 (SDG 14)", text: "清除漁網需消耗高碳排燃料。是否立即出動清理船？", c1: "行動：不計成本清除海洋殺手", c2: "觀望：優先維持低碳排現狀" },
-            2200: { step: "03/05", title: "責任消費 (SDG 12)", text: "昂貴的永續標章海鮮 vs. 便宜來源不明的海鮮。你的選擇？", c1: "堅持：只購買有永續認證產品", c2: "現實：優先考慮家庭開支節省" },
-            3500: { step: "04/05", title: "深海採礦爭議", text: "電動車需要稀有金屬，但採礦會毀滅深海地貌。支持許可嗎？", c1: "支持：為了全球電動化減碳", c2: "禁止：保護人類最後的淨土" },
-            4800: { step: "05/05", title: "塑膠微粒災難", text: "推動強硬禁塑令會造成經濟陣痛。是否立即立法？", c1: "立即：推動全民減塑生活", c2: "穩健：先維持經濟穩定再轉型" }
-        };
-
-        let score = 0;
-        let triggered = [];
-        const bgm = document.getElementById('bgm');
-
-        function startExperience() {
-            document.getElementById('start-overlay').style.display = 'none';
-            document.body.style.overflow = 'auto';
-            bgm.play().catch(e => console.log("聲音播放受阻:", e));
-        }
-
-        window.addEventListener('scroll', () => {
-            let scrollY = window.scrollY;
-            let depth = Math.floor(scrollY / 10);
-            document.getElementById('meters').innerText = depth;
-            document.getElementById('ocean-bg').style.backgroundPosition = `0 -${scrollY}px`;
-
-            const label = document.getElementById('zone-label');
-            if (depth < 200) label.innerText = "SUNLIGHT ZONE";
-            else if (depth < 800) label.innerText = "TWILIGHT ZONE";
-            else label.innerText = "MIDNIGHT ZONE";
-
-            [400, 1200, 2200, 3500, 4800].forEach(d => {
-                if (depth >= d && !triggered.includes(d)) showQuiz(d);
-            });
-
-            if (depth >= 6500 && triggered.length >= 5) showResults();
-        });
-
-        function showQuiz(d) {
-            triggered.push(d);
-            const data = quizData[d];
-            document.getElementById('quiz-step').innerText = `STEP ${data.step}`;
-            document.getElementById('quiz-title').innerText = data.title;
-            document.getElementById('quiz-text').innerText = data.text;
-            
-            const container = document.getElementById('choices-container');
-            container.innerHTML = '';
-            [data.c1, data.c2].forEach((txt, idx) => {
-                const btn = document.createElement('button');
-                btn.className = 'choice-btn';
-                btn.innerText = txt;
-                btn.onclick = () => {
-                    if (idx === 0) { 
-                        score -= 5;
-                        document.getElementById('ocean-bg').style.filter = "hue-rotate(85deg) brightness(50%) blur(15px)";
-                        document.getElementById('particles').classList.add('active-pollution');
-                        document.getElementById('eco-1').style.opacity = "0";
-                        document.getElementById('eco-2').style.opacity = "0";
-                        document.getElementById('trash-item').style.opacity = "1";
-                    } else { score += 5; }
-                    document.getElementById('quiz-modal').style.display = 'none';
-                    document.body.style.overflow = 'auto';
-                };
-                container.appendChild(btn);
-            });
-            document.getElementById('quiz-modal').style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
-
-        function showResults() {
-            document.getElementById('result-page').style.display = 'block';
-            let n, d, p, m, t;
-            if (score > 0) {
-                n = "感性生態守護者"; d = "你堅信生命的絕對價值高於商業利益，願意守護海洋最純粹的平靜。"; p = 31; m = "冷靜減碳家";
-                t = "落實 SDG 14：優先選擇具有 MSC 永續認證的海鮮標章，減少一次性塑膠使用。";
-            } else {
-                n = "冷靜減碳家"; d = "你擁有強大的理性思維。明白對抗氣候災難(SDG 13)需要必要的權衡與抉擇。"; p = 44; m = "感性生態守護者";
-                t = "落實 SDG 13：支持碳足跡追蹤與能源轉型政策，關注工業與生態的平衡。";
-            }
-            document.getElementById('personality-name').innerText = n;
-            document.getElementById('personality-desc').innerText = d;
-            document.getElementById('same-pct').innerText = p;
-            document.getElementById('best-match').innerText = m;
-            document.getElementById('takeaway-text').innerText = t;
-        }
-    </script>
-</body>
-</html>
+            <div class="p-4 bg-white text-dark rounded-4 text-start mx-2">
+                <h6 class="fw-bold mb-2">📍 Takeaway 行動指南 (SD
