@@ -2,53 +2,73 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <title>JavaScript 物件屬性操作練習</title>
+    <title>JavaScript Object Properties Practice</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { font-family: "Microsoft JhengHei", Arial, sans-serif; margin: 30px; line-height: 1.6; }
-        .result-box { background-color: #f4f6f9; border-left: 5px solid #00bcd4; padding: 15px; margin: 15px 0; border-radius: 4px; }
-        code { background-color: #e8eff7; padding: 2px 6px; border-radius: 4px; font-family: Consolas, monospace; }
-        pre { background-color: #272822; color: #f8f8f2; padding: 15px; border-radius: 6px; overflow-x: auto; font-family: Consolas, monospace; }
+        body { background-color: #f8f9fa; font-family: "Microsoft JhengHei", sans-serif; padding-top: 50px; }
+        .assignment-card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); max-width: 700px; margin: auto; }
+        .step-box { background-color: #eef9fa; border-left: 4px solid #00bcd4; padding: 15px; margin: 15px 0; border-radius: 0 10px 10px 0; }
+        pre { background-color: #212529; color: #f8f9fa; padding: 15px; border-radius: 10px; font-family: Consolas, monospace; }
+        code { color: #d63384; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <h2>JavaScript 物件操作實作</h2>
-    <p>本範例依據題目要求，對指定物件進行屬性列舉、刪除及印出操作。</p>
+    <div class="container">
+        <div class="assignment-card">
+            <h2 class="fw-bold mb-4 text-center text-secondary">JavaScript Object Operation</h2>
+            <p class="text-muted text-center mb-4">作業要求：列出屬性 ➔ 刪除 age ➔ 印出新物件</p>
+            
+            <hr>
 
-    <hr>
+            <h5 class="fw-bold text-dark mt-4">📋 原始 Sample Object</h5>
+            <pre>
+var Person = {
+    firstName : "Tony",
+    lastName  : "Lee",
+    age       : 50,
+    eyeColor  : "Blue"
+};</pre>
 
-    <h4>1. 原始物件的所有屬性 (Properties)：</h4>
-    <div class="result-box" id="all-properties"></div>
+            <div class="step-box">
+                <h6 class="fw-bold text-info">Step 1: List all properties of the object</h6>
+                <div id="step1-output" class="fs-5 mt-2 text-dark fw-medium"></div>
+            </div>
 
-    <h4>2. 執行刪除指令：</h4>
-    <div class="result-box">
-        <code>delete Person.age;</code>
+            <div class="step-box">
+                <h6 class="fw-bold text-info">Step 2: Delete the <code>age</code> property</h6>
+                <p class="mb-0 mt-2 text-muted">執行指令：<code>delete Person.age;</code></p>
+            </div>
+
+            <div class="step-box">
+                <h6 class="fw-bold text-info">Step 3: Print the object after deleting the property</h6>
+                <pre id="step3-output" class="mb-0 mt-2"></pre>
+            </div>
+        </div>
     </div>
 
-    <h4>3. 刪除後的物件完整內容 (JSON 字串化)：</h4>
-    <pre id="object-result"></pre>
-
     <script>
-        // 1. 定義題目給定的 Person 物件
+        // 定義老師指定的 Sample object
         var Person = {
             firstName : "Tony",
-            lastName : "Lee",
-            age : 50,
-            eyeColor : "Blue"
+            lastName  : "Lee",
+            age       : 50,
+            eyeColor  : "Blue"
         };
 
-        // 2. 列出物件的所有屬性名稱
-        // 使用 Object.keys() 可以將物件的所有 key 取出成一個陣列
-        var propertiesList = Object.keys(Person);
-        document.getElementById("all-properties").innerHTML = "現有屬性： " + propertiesList.join(", ");
+        // 【Step 1】 列出所有屬性
+        // 使用 Object.keys() 抓出物件內所有的屬性名稱（Key）
+        var allProperties = Object.keys(Person);
+        document.getElementById("step1-output").innerText = "Properties: [ " + allProperties.join(", ") + " ]";
 
-        // 3. 刪除 age 屬性
+        // 【Step 2】 刪除 age 屬性
         delete Person.age;
 
-        // 4. 印出刪除後的物件狀態
-        // 使用 JSON.stringify(obj, null, 2) 可以將物件漂亮地排版成字串顯示在網頁上
-        document.getElementById("object-result").textContent = JSON.stringify(Person, null, 2);
+        // 【Step 3】 印出刪除後的物件狀態
+        // 使用 JSON.stringify 將剩餘的物件資料漂亮地轉換成文字排版
+        document.getElementById("step3-output").textContent = JSON.stringify(Person, null, 4);
     </script>
 
 </body>
 </html>
+
