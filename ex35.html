@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>JavaScript 物件屬性操作練習</title>
+    <style>
+        body { font-family: "Microsoft JhengHei", Arial, sans-serif; margin: 30px; line-height: 1.6; }
+        .result-box { background-color: #f4f6f9; border-left: 5px solid #00bcd4; padding: 15px; margin: 15px 0; border-radius: 4px; }
+        code { background-color: #e8eff7; padding: 2px 6px; border-radius: 4px; font-family: Consolas, monospace; }
+        pre { background-color: #272822; color: #f8f8f2; padding: 15px; border-radius: 6px; overflow-x: auto; font-family: Consolas, monospace; }
+    </style>
+</head>
+<body>
+
+    <h2>JavaScript 物件操作實作</h2>
+    <p>本範例依據題目要求，對指定物件進行屬性列舉、刪除及印出操作。</p>
+
+    <hr>
+
+    <h4>1. 原始物件的所有屬性 (Properties)：</h4>
+    <div class="result-box" id="all-properties"></div>
+
+    <h4>2. 執行刪除指令：</h4>
+    <div class="result-box">
+        <code>delete Person.age;</code>
+    </div>
+
+    <h4>3. 刪除後的物件完整內容 (JSON 字串化)：</h4>
+    <pre id="object-result"></pre>
+
+    <script>
+        // 1. 定義題目給定的 Person 物件
+        var Person = {
+            firstName : "Tony",
+            lastName : "Lee",
+            age : 50,
+            eyeColor : "Blue"
+        };
+
+        // 2. 列出物件的所有屬性名稱
+        // 使用 Object.keys() 可以將物件的所有 key 取出成一個陣列
+        var propertiesList = Object.keys(Person);
+        document.getElementById("all-properties").innerHTML = "現有屬性： " + propertiesList.join(", ");
+
+        // 3. 刪除 age 屬性
+        delete Person.age;
+
+        // 4. 印出刪除後的物件狀態
+        // 使用 JSON.stringify(obj, null, 2) 可以將物件漂亮地排版成字串顯示在網頁上
+        document.getElementById("object-result").textContent = JSON.stringify(Person, null, 2);
+    </script>
+
+</body>
+</html>
