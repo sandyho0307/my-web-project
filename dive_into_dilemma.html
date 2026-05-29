@@ -2,26 +2,28 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dive into Dilemma | 海洋性格行動實驗室</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-        :root { --accent: #00bcd4; }
+        :root { --accent: #00bcd4; --danger: #ff4757; }
         body { margin: 0; background: #000; color: white; font-family: "Microsoft JhengHei", sans-serif; overflow-x: hidden; }
         
-        /* 啟動遮罩：保證聲音播放 */
         #start-mask {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: radial-gradient(circle, #1a3a5a 0%, #000 100%);
             z-index: 10000; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer;
         }
 
+        /* 漸層海洋背景：加入了過渡動畫，讓變色更絲滑 */
         #ocean-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(to bottom, #87CEEB 0%, #01579b 40%, #002147 70%, #000 100%);
-            z-index: -2; transition: 1.5s ease;
+            z-index: -2; transition: filter 2s ease;
         }
 
-        /* 視窗框架 */
+        /* 潛水艇觀景窗 UI */
         .submersible-window {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             width: 88vw; height: 68vh; border: 4px solid rgba(255,255,255,0.1);
@@ -29,10 +31,11 @@
             pointer-events: none; z-index: 1000;
         }
 
-        /* 魚群動畫 (開心水族箱風格) */
-        .fish { position: fixed; font-size: 2.5rem; transition: 2s; z-index: 10; pointer-events: none; }
-        .swimming { animation: swim 6s infinite alternate ease-in-out; }
-        @keyframes swim { from { transform: translate(0,0); } to { transform: translate(60px, 30px); } }
+        /* 高級去背素材動態環境 */
+        .ocean-asset { position: absolute; background-size: contain; background-repeat: no-repeat; pointer-events: none; transition: opacity 1.5s ease; z-index: 10; }
+        .swimming-fast { animation: swim 8s infinite alternate ease-in-out; }
+        .swimming-slow { animation: swim 14s infinite alternate ease-in-out; }
+        @keyframes swim { from { transform: translate(0,0); } to { transform: translate(100px, 40px); } }
 
         .gauge { position: fixed; right: 40px; top: 50%; transform: translateY(-50%); font-size: 3.5rem; font-weight: bold; color: var(--accent); z-index: 1001; text-shadow: 0 0 15px rgba(0,188,212,0.5); }
 
@@ -45,14 +48,14 @@
         .btn-opt { width: 100%; margin-top: 15px; padding: 18px; border: 1px solid rgba(255,255,255,0.3); background: none; color: white; border-radius: 15px; transition: 0.3s; font-weight: bold; }
         .btn-opt:hover { background: white; color: black; transform: scale(1.02); }
 
-        /* 內容高度設定 */
         .content-section { height: 2000px; display: flex; align-items: center; justify-content: center; position: relative; }
         
         #final-result {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 5000; padding: 20px;
+            background: #050a12; display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 5000; padding: 20px; overflow-y: auto;
         }
-        .result-card { background: linear-gradient(135deg, #0f172a, #1e3a8a); padding: 50px; border-radius: 40px; max-width: 550px; border: 1px solid var(--accent); text-align: center; }
+        /* 性格分析小卡：優化為極簡黑卡雜誌風格，利於截圖分享 */
+        .result-card { background: linear-gradient(135deg, #090d16 0%, #111827 100%); padding: 40px; border-radius: 35px; max-width: 500px; width: 100%; border: 1px solid rgba(255,255,255,0.1); text-align: center; color: white; }
     </style>
 </head>
 <body>
@@ -89,22 +92,25 @@
     </div>
 
     <div id="final-result">
-        <div class="result-card">
-            <h5 class="opacity-50 tracking-widest mb-3">OCEAN IDENTITY</h5>
-            <h1 id="res-name" class="display-4 fw-bold text-info mb-4"></h1>
-            <p id="res-desc" class="lead mb-5"></p>
+        <div class="result-card shadow-lg" id="capture-zone">
+            <h5 class="opacity-50 tracking-widest mb-3 text-uppercase fs-6" style="letter-spacing: 4px;">Ocean Identity Lab</h5>
+            <h1 id="res-name" class="display-5 fw-bold text-info mb-4"></h1>
+            <p id="res-desc" class="lead fs-6 opacity-75 mb-4 text-start px-2" style="line-height: 1.8;"></p>
             
             <div class="row g-2 mb-4">
-                <div class="col-6"><div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 20px;">👥 <span id="res-pct">0</span>% 同類人</div></div>
-                <div class="col-6"><div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 20px;">🤝 夥伴：<span id="res-match"></span></div></div>
+                <div class="col-6"><div style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.05);">👥 <span id="res-pct">0</span>% 同類人</div></div>
+                <div class="col-6"><div style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.05);">🤝 夥伴：<span id="res-match"></span></div></div>
             </div>
 
-            <div class="p-4 bg-white text-dark rounded-4 text-start mb-4">
-                <h6 class="fw-bold mb-2">📍 Takeaway 行動指南</h6>
-                <p id="res-sdg" class="small mb-0"></p>
+            <div class="p-4 bg-light text-dark rounded-4 text-start mb-4 shadow-sm">
+                <h6 class="fw-bold mb-2 text-dark">📍 Takeaway 行動指南</h6>
+                <p id="res-sdg" class="small mb-0 text-secondary" style="line-height: 1.6;"></p>
             </div>
             
-            <button class="btn btn-info w-100 rounded-pill py-3 fw-bold" onclick="window.location.reload();">重新開始探險</button>
+            <div class="d-grid gap-2">
+                <button class="btn btn-info rounded-pill py-3 fw-bold text-white shadow" onclick="saveCard()">💾 儲存特質小卡 (分享到 IG)</button>
+                <button class="btn btn-outline-secondary rounded-pill py-2 small opacity-75 border-0 text-white mt-1" onclick="window.location.reload();">重新開始探險</button>
+            </div>
         </div>
     </div>
 
@@ -112,24 +118,40 @@
         const sound = document.getElementById('bg-sound');
         const modal = document.getElementById('modal');
         const bg = document.getElementById('ocean-bg');
+        const scrollArea = document.getElementById('scroll-area');
+
+        let score = 0;
+        let done = [];
+        let pollutionLevel = 0; // 用來累積環境惡化程度
 
         function beginExperience() {
             document.getElementById('start-mask').style.display = 'none';
-            document.getElementById('scroll-area').style.display = 'block';
+            scrollArea.style.display = 'block';
             document.body.style.overflow = 'auto';
-            sound.play();
+            sound.play().catch(e => console.log("音訊啟動被限制"));
+            initHighQualityEco();
         }
 
-        // 生成 100 隻豐富魚群
-        const species = ['🐟', '🐠', '🐡', '🐙', '🐢', '🦐', '🐬', '🐳', '🦈', '🦀', '🌿'];
-        for(let i=0; i<100; i++) {
-            let f = document.createElement('div');
-            f.className = 'fish swimming';
-            f.innerText = species[Math.floor(Math.random() * species.length)];
-            f.style.left = Math.random() * 90 + '%';
-            f.style.top = Math.random() * 90 + '%';
-            f.style.opacity = Math.random() * 0.5 + 0.2;
-            document.body.appendChild(f);
+        // 優化方向：動態注入高解析度去背 Unsplash 圖像資產
+        function initHighQualityEco() {
+            const assets = [
+                { url: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=150&q=80', top: 1500, type: 'swimming-fast' }, // 海龜
+                { url: 'https://images.unsplash.com/photo-1560275669-46c5a88d6a4c?auto=format&fit=crop&w=120&q=80', top: 3500, type: 'swimming-slow' }, // 水母
+                { url: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=100&q=80', top: 5200, type: 'swimming-fast' },
+                { url: 'https://images.unsplash.com/photo-1618477388954-7852f32655ec?auto=format&fit=crop&w=120&q=80', top: 7800, type: 'swimming-slow' }  // 深海魚類
+            ];
+
+            assets.forEach((asset, i) => {
+                let div = document.createElement('div');
+                div.className = `ocean-asset ${asset.type} asset-id-${i}`;
+                div.style.backgroundImage = `url('${asset.url}')`;
+                div.style.width = '120px';
+                div.style.height = '120px';
+                div.style.left = `${Math.random() * 70 + 10}%`;
+                div.style.top = `${asset.top}px`;
+                div.style.borderRadius = '50%'; // 形成透亮圓形視窗感
+                scrollArea.appendChild(div);
+            });
         }
 
         const questions = [
@@ -139,9 +161,6 @@
             { d: 800, t: "深海採礦爭議", p: "電動車需要深海礦產，但採礦會毀滅海床。支持嗎？", a: "支持開採", b: "嚴格禁止" },
             { d: 950, t: "塑膠微粒災難", p: "全面禁塑會造成生活巨變。支持立即立法嗎？", a: "穩健轉型", b: "立即禁塑" }
         ];
-
-        let score = 0;
-        let done = [];
 
         window.onscroll = () => {
             let scrollTotal = document.documentElement.scrollHeight - window.innerHeight;
@@ -177,12 +196,14 @@
                 b.onclick = () => {
                     if (i === 0) {
                         score -= 10;
-                        bg.style.filter = "hue-rotate(90deg) brightness(40%) blur(10px)";
-                        document.querySelectorAll('.fish').forEach(f => f.style.opacity = '0');
+                        pollutionLevel += 25; // 優化：污染採取累積制
+                        bg.style.filter = `hue-rotate(${pollutionLevel}deg) brightness(${100 - pollutionLevel/2}%) blur(${pollutionLevel/10}px)`;
+                        // 部分生物因環境變差降低透明度
+                        document.querySelectorAll('.ocean-asset').forEach(asset => {
+                            asset.style.opacity = `${1 - pollutionLevel/120}`;
+                        });
                     } else {
                         score += 10;
-                        bg.style.filter = "none";
-                        document.querySelectorAll('.fish').forEach(f => f.style.opacity = '0.4');
                     }
                     modal.style.display = 'none';
                     document.body.style.overflow = 'auto';
@@ -200,11 +221,17 @@
 
             let name, desc, pct, match, sdg;
             if (score > 0) {
-                name = "感性生態守護者"; desc = "你堅信生命的價值高於商業利益，守護海洋最純粹的平靜。"; pct = 32; match = "冷靜減碳家";
-                sdg = "實踐 SDG 14：選擇 MSC 永續標章海鮮，減少塑膠使用，給予海洋修復的空間。";
+                name = "深海光之守護者"; 
+                desc = "你對物種與棲地的生命尊重高於一切。在經濟與保育的巨大失衡前，你甘願選擇代價較高的守護之路，抗拒短期利益，將目光投向跨越世代的原始正義。"; 
+                pct = 32; 
+                match = "理性減碳決策家";
+                sdg = "【實踐 SDG 14：永續海洋】在日常採購中，主動辨識具有 MSC 或 ASC 生態標章之海鮮，並支持關閉特定高危珊瑚礁觀光區，將消費行為轉換為具體的環境防禦力。";
             } else {
-                name = "冷靜減碳家"; desc = "你擁有強大的理性思維，明白對抗氣候災難(SDG 13)需要艱難的權衡。"; pct = 46; match = "感性生態守護者";
-                sdg = "實踐 SDG 13：支持能源轉型政策，參與低碳生活的推廣。你的抉擇能推動產業結構化減碳。";
+                name = "理性減碳決策家"; 
+                desc = "你擁有宏觀的結構性大局觀。面對全球氣候災難，你深知不能因區域性的感性保育而延遲了淨零轉型步伐，傾向在眾多代價中選擇最能對抗總體氣候變遷的全局解方。"; 
+                pct = 46; 
+                match = "深海光之守護者";
+                sdg = "【實踐 SDG 13：氣候行動】關注並推動具備高生態補償機制的能源轉型政策，理解並支持綠色金融，將精力集中在解決宏觀碳排放與產業再生結構重組。";
             }
             
             document.getElementById('res-name').innerText = name;
@@ -212,6 +239,30 @@
             document.getElementById('res-pct').innerText = pct;
             document.getElementById('res-match').innerText = match;
             document.getElementById('res-sdg').innerText = sdg;
+        }
+
+        // 優化方向：卡片儲存分享功能 (透過 html2canvas 將黑卡雜誌排版轉化為圖片下載)
+        function saveCard() {
+            const zone = document.getElementById('capture-zone');
+            // 暫時隱藏儲存按鈕以免被拍進去
+            const buttons = zone.querySelector('.d-grid');
+            buttons.style.opacity = '0';
+
+            html2canvas(zone, {
+                backgroundColor: '#090d16',
+                scale: 2, // 提升圖片清晰度，適合視網膜螢幕
+                logging: false,
+                useCORS: true // 允許跨網域圖片資源截圖
+            }).then(canvas => {
+                buttons.style.opacity = '1'; // 恢復按鈕
+                const link = document.createElement('a');
+                link.download = `Dive_into_Dilemma_${document.getElementById('res-name').innerText}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            }).catch(err => {
+                buttons.style.opacity = '1';
+                alert("儲存失敗，請嘗試使用手機自帶螢幕截圖功能。");
+            });
         }
     </script>
 </body>
