@@ -8,9 +8,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root { --accent: #00bcd4; --danger: #ff4757; }
-        body { margin: 0; background: #000; color: white; font-family: "Microsoft JhengHei", sans-serif; overflow-x: hidden; transition: transform 0.1s ease; }
+        body { margin: 0; background: #000; color: white; font-family: "Microsoft JhengHei", sans-serif; overflow-x: hidden; }
         
-        /* 啟動遮罩 */
         #start-mask {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: radial-gradient(circle, #1a3a5a 0%, #000 100%);
@@ -23,7 +22,6 @@
             z-index: -2; transition: filter 2s ease;
         }
 
-        /* 潛水艇視窗 */
         .submersible-window {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             width: 88vw; height: 68vh; border: 4px solid rgba(255,255,255,0.1);
@@ -31,91 +29,100 @@
             pointer-events: none; z-index: 1000; transition: border-color 0.5s ease;
         }
 
-        /* 開心水族箱魚群 */
-        .fish { position: fixed; font-size: 2.5rem; transition: transform 2s ease, opacity 1.5s ease; z-index: 10; pointer-events: none; }
-        .swimming { animation: swim 6s infinite alternate ease-in-out; }
-        @keyframes swim { from { transform: translate(0,0); } to { transform: translate(60px, 30px); } }
-
-        /* 激烈警報畫面閃爍 */
-        @keyframes alert-flash { 0%, 100% { border-color: rgba(255,255,255,0.1); } 50% { border-color: var(--danger); } }
-        .emergency { animation: alert-flash 1s infinite; }
-
-        /* 潛水艇受損震動 */
-        @keyframes submarine-shake {
-            0%, 100% { transform: translate(0, 0); }
-            20%, 60% { transform: translate(-8px, 5px); }
-            40%, 80% { transform: translate(8px, -5px); }
+        /* 魚群流體動畫 - 模擬開心水族箱物理游動 */
+        .fish { position: fixed; font-size: 2.5rem; transition: transform 2s ease, opacity 1s ease, top 2s ease; z-index: 10; pointer-events: none; }
+        .swimming { animation: swim 8s infinite alternate ease-in-out; }
+        @keyframes swim { 
+            0% { transform: translate(0,0) scaleX(1); } 
+            50% { transform: translate(80px, 20px) scaleX(1); }
+            51% { transform: translate(80px, 20px) scaleX(-1); }
+            100% { transform: translate(0,0) scaleX(-1); }
         }
-        .shake-active { animation: submarine-shake 0.4s ease-in-out 2; }
 
-        .gauge { position: fixed; right: 40px; top: 50%; transform: translateY(-50%); font-size: 3.5rem; font-weight: bold; color: var(--accent); z-index: 1001; text-shadow: 0 0 15px rgba(0,188,212,0.5); }
+        .emergency { animation: alert-flash 0.5s infinite; }
+        @keyframes alert-flash { 0%, 100% { border-color: rgba(255,255,255,0.1); } 50% { border-color: var(--danger); box-shadow: 0 0 20px var(--danger); } }
+
+        @keyframes submarine-shake {
+            0%, 100% { transform: translate(-50%, -50%); }
+            20%, 60% { transform: translate(-51%, -49%); }
+            40%, 80% { transform: translate(-49%, -51%); }
+        }
+        .shake-active { animation: submarine-shake 0.3s ease-in-out 2; }
+
+        .gauge { position: fixed; right: 40px; top: 50%; transform: translateY(-50%); font-size: 3.5rem; font-weight: bold; color: var(--accent); z-index: 1001; text-shadow: 0 0 15px rgba(0,188,212,0.5); text-align: right; }
+        .zone-indicator { font-size: 1rem; color: rgba(255,255,255,0.4); letter-spacing: 2px; margin-top: 5px; }
 
         .modal-box {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); display: none; justify-content: center; align-items: center; z-index: 3000;
+            background: rgba(0,0,0,0.92); display: none; justify-content: center; align-items: center; z-index: 3000;
             backdrop-filter: blur(20px);
         }
-        .card-inner { background: #111; padding: 45px; border: 2px solid var(--accent); border-radius: 40px; text-align: center; max-width: 600px; box-shadow: 0 0 30px rgba(0,188,212,0.2); transition: border-color 1s ease; }
-        .btn-opt { width: 100%; margin-top: 15px; padding: 18px; border: 1px solid rgba(255,255,255,0.3); background: none; color: white; border-radius: 15px; transition: 0.3s; font-weight: bold; }
-        .btn-opt:hover { background: white; color: black; transform: scale(1.02); }
+        .card-inner { background: #0d1117; padding: 45px; border: 2px solid var(--accent); border-radius: 40px; text-align: center; max-width: 600px; box-shadow: 0 0 30px rgba(0,188,212,0.15); }
+        .btn-opt { width: 100%; margin-top: 15px; padding: 18px; border: 1px solid rgba(255,255,255,0.15); background: none; color: white; border-radius: 15px; transition: 0.3s; font-weight: bold; }
+        .btn-opt:hover { background: white; color: black; transform: translateY(-2px); }
 
-        .content-section { height: 2000px; display: flex; align-items: center; justify-content: center; position: relative; }
-        
+        .content-section { height: 2400px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
+        .content-section h2 { font-size: 3.5rem; font-weight: 800; letter-spacing: 4px; background: linear-gradient(180deg, #fff, rgba(255,255,255,0.3)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
         #final-result {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #060b13; display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 5000; padding: 20px; overflow-y: auto;
+            background: #040710; display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 5000; padding: 20px; overflow-y: auto;
         }
-        .result-card { background: linear-gradient(135deg, #090d16 0%, #111827 100%); padding: 40px; border-radius: 35px; max-width: 500px; width: 100%; border: 1px solid rgba(255,255,255,0.1); text-align: center; color: white; }
+        .result-card { background: linear-gradient(135deg, #070a12 0%, #0f172a 100%); padding: 45px; border-radius: 35px; max-width: 520px; width: 100%; border: 1px solid rgba(0, 188, 212, 0.3); text-align: center; color: white; }
     </style>
 </head>
 <body>
 
     <div id="start-mask" onclick="beginExperience()">
         <h1 class="display-3 fw-bold mb-4">Dive into Dilemma</h1>
-        <p class="h4 text-info mb-5">SDG 14 海洋性格動態因果實驗室</p>
-        <div class="btn btn-info btn-lg rounded-pill px-5 py-3 fw-bold shadow-lg">啟動實驗 (解鎖網頁音訊)</div>
+        <p class="h4 text-info mb-5">SDG 14 海洋性格垂直因果實驗室</p>
+        <div class="btn btn-info btn-lg rounded-pill px-5 py-3 fw-bold shadow-lg text-white">啟動實驗船 (解鎖垂直音訊濾鏡)</div>
     </div>
 
     <div id="ocean-bg"></div>
     <div class="submersible-window" id="sub-frame"></div>
-    <div class="gauge"><span id="m-count">0</span>M</div>
+    
+    <div class="gauge">
+        <div><span id="m-count">0</span>M</div>
+        <div class="zone-indicator" id="zone-txt">SUNLIGHT ZONE</div>
+    </div>
 
     <div id="modal" class="modal-box">
         <div class="card-inner" id="quiz-node">
             <h6 class="text-info tracking-widest mb-2" id="q-step">REALITY ANALYSIS</h6>
             <h2 id="q-title" class="fw-bold mb-4"></h2>
-            <p id="q-text" class="lead opacity-75 mb-5"></p>
+            <p id="q-text" class="lead opacity-75 mb-5" style="font-size: 1.1rem; line-height: 1.7;"></p>
             <div id="btn-area"></div>
         </div>
     </div>
 
-    <div id="scroll-area" style="height: 12000px; display: none;">
-        <section class="content-section"><h1>潛入因果海洋...</h1></section>
-        <section class="content-section"><h2>陽光層 (200m)</h2></section>
-        <section class="content-section"><h2>暮色層 (500m)</h2></section>
-        <section class="content-section"><h2>午夜層 (800m)</h2></section>
-        <section class="content-section"><h2>抵達環境決策臨界底端</h2></section>
+    <div id="scroll-area" style="display: none;">
+        <section class="content-section"><h2>下潛準備...</h2><p class="opacity-50">請滾動滑鼠，垂直潛入海溝</p></section>
+        <section class="content-section" id="sec-1"><h2>陽光層 (200m)</h2><p class="opacity-50">光線充足的近海生態核心區</p></section>
+        <section class="content-section" id="sec-2"><h2>暮色層 (500m)</h2><p class="opacity-50">光線微弱的未知中層地帶</p></section>
+        <section class="content-section" id="sec-3"><h2>午夜層 (800m)</h2><p class="opacity-50">完全黑暗的巨大封存壓力區</p></section>
+        <section class="content-section" id="sec-4"><h2>超深淵層 (950m)</h2><p class="opacity-50">抵達沉積浩劫的最終審判底端</p></section>
     </div>
 
     <div id="final-result">
         <div class="result-card shadow-lg" id="capture-zone">
-            <h5 class="opacity-50 tracking-widest mb-3 text-uppercase fs-6" style="letter-spacing: 4px;">Ocean Identity Lab</h5>
-            <h1 id="res-name" class="display-5 fw-bold text-info mb-4"></h1>
-            <p id="res-desc" class="lead fs-6 opacity-75 mb-4 text-start px-2" style="line-height: 1.8;"></p>
+            <h5 class="text-info tracking-widest mb-3 text-uppercase small" style="letter-spacing: 4px;">SDG 14 Profile Certificate</h5>
+            <h1 id="res-name" class="display-6 fw-bold mb-4 text-white"></h1>
+            <p id="res-desc" class="small opacity-75 mb-4 text-start px-2" style="line-height: 1.7; text-align: justify;"></p>
             
             <div class="row g-2 mb-4">
-                <div class="col-6"><div style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.05);">👥 <span id="res-pct">0</span>% 同類人</div></div>
-                <div class="col-6"><div style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.05);">🤝 夥伴：<span id="res-match"></span></div></div>
+                <div class="col-6"><div style="background: rgba(0,188,212,0.08); padding: 12px; border-radius: 15px; border: 1px solid rgba(0,188,212,0.15);">👥 <span id="res-pct" class="fw-bold text-info">0</span>% 同類人</div></div>
+                <div class="col-6"><div style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.08);">🤝 夥伴：<span id="res-match" class="fw-bold"></span></div></div>
             </div>
 
-            <div class="p-4 bg-light text-dark rounded-4 text-start mb-4 shadow-sm">
+            <div class="p-4 bg-light text-dark rounded-4 text-start mb-4 shadow-sm" style="border-left: 4px solid var(--accent);">
                 <h6 class="fw-bold mb-2 text-dark">📍 Takeaway 行動指南</h6>
                 <p id="res-sdg" class="small mb-0 text-secondary" style="line-height: 1.6;"></p>
             </div>
             
             <div class="d-grid gap-2">
-                <button class="btn btn-info rounded-pill py-3 fw-bold text-white shadow" onclick="saveCard()">💾 儲存特質小卡 (分享到 IG)</button>
-                <button class="btn btn-outline-secondary rounded-pill py-2 small opacity-75 border-0 text-white mt-1" onclick="window.location.reload();">重新開始探險</button>
+                <button class="btn btn-info rounded-pill py-3 fw-bold text-white shadow" onclick="saveCard()">💾 儲存性格小卡 (分享至社群)</button>
+                <button class="btn btn-outline-secondary rounded-pill py-2 small opacity-50 border-0 text-white mt-1" onclick="window.location.reload();">重新實驗</button>
             </div>
         </div>
     </div>
@@ -124,23 +131,21 @@
         const modal = document.getElementById('modal');
         const bg = document.getElementById('ocean-bg');
         const frame = document.getElementById('sub-frame');
-        const node = document.getElementById('quiz-node');
+        const scrollArea = document.getElementById('scroll-area');
 
         let audioCtx, whiteNoise, filterNode;
         let score = 0;
         let done = [];
-        let damageCount = 0; // 追蹤玩家選擇了幾次「破壞環境」
+        let damageCount = 0; 
 
-        // 【音效終極解決方案】：使用 Web Audio API 現場即時合成海浪白噪音
+        // 【Web Audio API】 即時海浪聲音合成與動態深海濾鏡
         function beginExperience() {
             document.getElementById('start-mask').style.display = 'none';
-            document.getElementById('scroll-area').style.display = 'block';
+            scrollArea.style.display = 'block';
             document.body.style.overflow = 'auto';
 
             try {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                
-                // 1. 建立白噪音緩衝區
                 let bufferSize = 2 * audioCtx.sampleRate;
                 let noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
                 let output = noiseBuffer.getChannelData(0);
@@ -152,52 +157,61 @@
                 whiteNoise.buffer = noiseBuffer;
                 whiteNoise.loop = true;
 
-                // 2. 使用低通濾鏡將白噪音塑造成海浪的悶低音
                 filterNode = audioCtx.createBiquadFilter();
                 filterNode.type = 'lowpass';
-                filterNode.frequency.setValueAtTime(350, audioCtx.currentTime);
+                filterNode.frequency.setValueAtTime(400, audioCtx.currentTime); // 初始明亮海浪聲
 
-                // 3. 建立音量震盪，模擬起伏的海浪聲
                 let gainNode = audioCtx.createGain();
-                gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gainNode.gain.setValueAtTime(0.12, audioCtx.currentTime);
                 
-                // 每 4 秒一個呼吸循環，模擬真實潮汐
+                // 呼吸潮汐波動
                 setInterval(() => {
                     let now = audioCtx.currentTime;
-                    gainNode.gain.linearRampToValueAtTime(0.25, now + 2);
+                    let currentFreq = filterNode.frequency.value;
+                    // 隨著水壓加深，高頻海浪聲會被大幅過濾，只剩下悶沉的深海背景轟鳴
+                    gainNode.gain.linearRampToValueAtTime(0.18, now + 2);
                     gainNode.gain.linearRampToValueAtTime(0.08, now + 4);
-                    filterNode.frequency.linearRampToValueAtTime(500, now + 2);
-                    filterNode.frequency.linearRampToValueAtTime(250, now + 4);
                 }, 4000);
 
                 whiteNoise.connect(filterNode);
                 filterNode.connect(gainNode);
                 gainNode.connect(audioCtx.destination);
-                
                 whiteNoise.start(0);
-            } catch(e) {
-                console.log("瀏覽器音訊核心初始化失敗: ", e);
-            }
+                
+                initBiomedicalLayers();
+            } catch(e) { console.log(e); }
         }
 
-        // 豐富水族箱魚群群落
-        const species = ['🐟', '🐠', '🐡', '🐙', '🐢', '🦐', '🐬', '🐳', '🦈', '🦀', '🌿'];
-        for(let i=0; i<100; i++) {
-            let f = document.createElement('div');
-            f.className = 'fish swimming';
-            f.innerText = species[Math.floor(Math.random() * species.length)];
-            f.style.left = Math.random() * 90 + '%';
-            f.style.top = Math.random() * 90 + '%';
-            f.style.opacity = Math.random() * 0.5 + 0.3;
-            document.body.appendChild(f);
+        // 【真實生物層出現】：根據不同生態深度生成對應物種
+        const creaturesData = [
+            { zone: 'light', icons: ['🐬', '🐠', '🐳', '🐢'], minTop: 1000, maxTop: 3000 },
+            { zone: 'twilight', icons: ['🐙', '🦑', '🐡', '🦐'], minTop: 3500, maxTop: 7000 },
+            { zone: 'midnight', icons: ['🦈', '🐡', '🌿', '🐚'], minTop: 7500, maxTop: 11000 }
+        ];
+
+        function initBiomedicalLayers() {
+            creaturesData.forEach(layer => {
+                for(let i=0; i<30; i++) {
+                    let f = document.createElement('div');
+                    f.className = 'fish swimming';
+                    f.innerText = layer.icons[Math.floor(Math.random() * layer.icons.length)];
+                    f.style.left = Math.random() * 85 + 5 + '%';
+                    f.style.top = (Math.random() * (layer.maxTop - layer.minTop) + layer.minTop) + 'px';
+                    f.style.opacity = Math.random() * 0.4 + 0.2;
+                    // 標註生物所在的環境區段
+                    f.setAttribute('data-zone', layer.zone);
+                    scrollArea.appendChild(f);
+                }
+            });
         }
 
+        // 與垂直生物地理學高度掛鉤的真實題目數據鏈
         const questions = [
-            { d: 200, t: "離岸風電噪音", p: "風電能大幅度減碳(SDG 13)，但震耳欲聾的施工噪音會震碎白海豚的聽覺，導致迷航滅絕。你的抉擇是？", a: "支持發展：忍受必要代價達成轉型", b: "保育優先：暫緩工程守護珍稀物種" },
-            { d: 400, t: "幽靈漁網代價", p: "海中積累大量廢棄拖網。派遣大型清理船打撈需消耗巨量高碳排燃料。要出動嗎？", a: "權衡現狀：優先維護低碳排大局", b: "立即打撈：不計燃料成本清除致命殺手" },
-            { d: 600, t: "責任消費抉擇", p: "超市裡擺著擁有永續認證但價格高昂的海鮮，以及便宜、來源不明的底拖網海鮮。身為消費者你買？", a: "現實考量：優先節省個人家庭開支", b: "責任消費：堅持高價購買永續認證海鮮" },
-            { d: 800, t: "深海採礦爭議", p: "電動車轉型急需深海稀有金屬，但開採許可將徹底摧毀萬年海床。你是否簽署許可？", a: "同意開採：加速全球電動化減碳革命", b: "嚴格禁止：守護地球最後的荒野地貌" },
-            { d: 950, t: "塑膠微粒災難", p: "全面禁用一次性塑膠將重創零售便利性。你支持立即推動強硬禁令嗎？", a: "穩健轉型：避免經濟劇烈震盪", b: "強硬禁塑：全民即刻承擔生活不便" }
+            { d: 200, t: "離岸風電與近海棲地 (200M)", p: "此區為陽光層，風電能大幅度減碳(SDG 13)，但風機打樁的巨大噪音會震碎白海豚與近海鯨類的聽覺。你的決策？", a: "支持轉型：忍受局部代價推動綠能發展", b: "保育優先：暫緩風場工期守護近海物種" },
+            { d: 450, t: "中層漁業開發兩難 (450M)", p: "潛入暮色層。人類因淺海漁業枯竭，正密謀大肆捕撈此區龐大的中層魚類資源（如燈籠魚）加工為經濟飼料，但這會切斷深海食物鏈。要簽發捕撈許可嗎？", a: "開放捕撈：舒緩陸地糧食與商業飼料危機", b: "嚴格禁捕：全面保護深海食物鏈的基石" },
+            { d: 650, t: "綠色晶片與深海採礦 (650M)", p: "抵達海底山脈。電動車電池急需此處儲量豐富的稀有重金屬礦產，但採礦會永久摧毀海底萬年珊瑚礁。是否開採？", a: "同意開採：加速全球低碳載具革命", b: "反對採礦：拒絕讓深海地貌成為轉型祭品" },
+            { d: 800, t: "幽靈漁網與碳封存浩劫 (800M)", p: "進入完全黑暗的午夜層。沈底廢棄漁網正持續纏殺深海物種，破壞海洋雪的碳封存機制。派遣打撈船清理需要燃燒巨量高碳排燃料。是否出動？", a: "觀望大局：優先維護大氣低碳排大局", b: "立刻打撈：不計燃料成本打撈致命幽靈網" },
+            { d: 950, t: "終端微粒沈積浩劫 (950M)", p: "抵達海溝底端。地表排出的塑膠微粒最終全部沈降堆積於此，生態瀕臨窒息。若要全面禁塑將對零售供應鏈造成巨幅經濟衝擊。你支持立即立法禁塑嗎？", a: "穩健轉型：採取漸進式減塑避免經濟震盪", b: "強硬禁塑：寧可承受生活與商業重創也必須即刻禁絕" }
         ];
 
         window.onscroll = () => {
@@ -206,7 +220,20 @@
             let pct = currentScroll / scrollTotal;
             let depth = Math.floor(pct * 1000);
             
+            // 修正點1：校準右側深度計
             document.getElementById('m-count').innerText = depth;
+
+            // 進階挑戰1：音訊隨深度動態過濾
+            if (filterNode && audioCtx) {
+                // 越深，低通濾波器的截止頻率越低 (400Hz -> 80Hz)
+                let targetFreq = 400 - (depth * 0.33);
+                filterNode.frequency.setValueAtTime(Math.max(75, targetFreq), audioCtx.currentTime);
+            }
+
+            const zoneTxt = document.getElementById('zone-txt');
+            if (depth < 200) zoneTxt.innerText = "SUNLIGHT ZONE";
+            else if (depth < 700) zoneTxt.innerText = "TWILIGHT ZONE";
+            else zoneTxt.innerText = "MIDNIGHT ZONE";
 
             questions.forEach((q, idx) => {
                 if (depth >= q.d && !done.includes(idx)) {
@@ -223,17 +250,15 @@
             done.push(idx);
             const q = questions[idx];
             
-            // 【因果鎖定功能】：如果前面累積了兩次以上的環境破壞行為，最後兩題的敘述會產生「惡化詛咒」
-            let currentPromptText = q.p;
+            // 特色：因果連鎖敘述
+            let finalPrompt = q.p;
             if (idx >= 3 && damageCount >= 2) {
-                currentPromptText = `⚠️【警告：由於你先前的決策偏向發展，此區生態已高度脆弱】 ${q.p}`;
-                node.style.borderColor = "var(--danger)";
-            } else {
-                node.style.borderColor = "var(--accent)";
+                finalPrompt = `⚠️【連鎖後果：由於你先前的決策忽視環境，此深海系統已嚴重受損。】 ${q.p}`;
+                document.getElementById('quiz-node').style.borderColor = "var(--danger)";
             }
 
             document.getElementById('q-title').innerText = q.t;
-            document.getElementById('q-text').innerText = currentPromptText;
+            document.getElementById('q-text').innerText = finalPrompt;
             const area = document.getElementById('btn-area');
             area.innerHTML = '';
 
@@ -244,34 +269,30 @@
                 b.onclick = () => {
                     if (i === 0) {
                         score -= 10;
-                        damageCount++; // 累積破壞點數
+                        damageCount++;
                         
-                        // 【激烈後果視覺化反應】：
-                        // 1. 背景根據破壞次數，越來越髒、越來越混濁
+                        // 激烈後果累積視覺化
                         let rotateDeg = damageCount * 45;
                         let brightnessVal = 50 - (damageCount * 8);
-                        let blurPx = damageCount * 4;
+                        let blurPx = damageCount * 3;
                         bg.style.filter = `hue-rotate(${rotateDeg}deg) brightness(${brightnessVal}%) blur(${blurPx}px)`;
                         
-                        // 2. 潛水艇視窗劇烈搖晃、亮起紅色警報
                         document.body.classList.add('shake-active');
                         frame.classList.add('emergency');
-                        setTimeout(() => document.body.classList.remove('shake-active'), 800);
+                        setTimeout(() => document.body.classList.remove('shake-active'), 400);
 
-                        // 3. 魚群生物因環境遭到破壞，依比例「死掉/隱藏」
+                        // 開心水族箱：生物受驚嚇逃竄並淡出消失
                         let allFish = document.querySelectorAll('.fish');
-                        let killCount = Math.floor(allFish.length * (damageCount / 5));
+                        let killTarget = Math.floor(allFish.length * (damageCount / 5));
                         allFish.forEach((f, fIdx) => {
-                            if (fIdx < killCount) f.style.opacity = '0';
+                            if (fIdx < killTarget) {
+                                f.style.transform = `translate(${Math.random()*200 - 100}px, -150px) scale(0)`;
+                                f.style.opacity = '0';
+                            }
                         });
-
                     } else {
                         score += 10;
-                        // 選擇永續：稍微減輕目前的混濁與警報
                         frame.classList.remove('emergency');
-                        if (bg.style.filter !== "none") {
-                            bg.style.filter = "brightness(80%)";
-                        }
                     }
                     modal.style.display = 'none';
                     document.body.style.overflow = 'auto';
@@ -288,18 +309,28 @@
             window.scrollTo(0, 0);
 
             let name, desc, pct, match, sdg;
-            if (score > 0) {
-                name = "深海光之守護者"; 
-                desc = "你堅信生命的絕對價值高於商業進步。在重大的利益考量前，你寧可犧牲轉型效率，也決不讓任何一個物種在你的決策下遭到滅絕。"; 
-                pct = 32; 
-                match = "理性減碳先鋒";
-                sdg = "實踐 SDG 14 永續海洋：在生活中落實責任消費，優先選購具備永續標章（如 MSC/ASC）的水產品，為海洋留下一絲喘息空間。";
+            
+            // 修正點3：四象限精準性格算法
+            if (score >= 20) {
+                name = "深海光之守護者";
+                desc = "你堅信生命的絕對價值高於商業進步。在重大的利益權衡前，你甘願放慢轉型效率，也決不讓任何一個物種在你的決策下遭到滅絕。";
+                pct = 24; match = "理性減碳策劃家";
+                sdg = "【永續海洋行動】在日常消費中，主動購買具備 MSC 或 ASC 認證的友善海鮮；減少一次性餐具使用，從消費端直接轉化為抵禦深海污染的防禦力。";
+            } else if (score >= 0 && score < 20) {
+                name = "永續消費實踐者";
+                desc = "你屬於務實的草根行動派。你重視環境價值，並傾向透過日常生活中的綠色消費與公民自律來達成永續，抗拒過於激進或由上而下的法規強制作風。";
+                pct = 31; match = "綠色經濟領航員";
+                sdg = "【責任生產與消費】落實循環經濟，支持參與在地二手社群、淨灘行動，用具體的日常實踐來引導零售產業進行結構性的永續轉型。";
+            } else if (score >= -20 && score < 0) {
+                name = "理性減碳策劃家";
+                desc = "你具備宏觀的大局觀與商管邏輯。你明白對抗全球氣候浩劫(SDG 13)需要必要的權衡。在區域生態與全球淨零大局產生衝突時，你傾向選擇宏觀碳排效益最高的解方。";
+                pct = 28; match = "深海光之守護者";
+                sdg = "【結構性低碳行動】關注並推動具備「生態補償機制」的乾淨能源政策，支持綠色金融，從制度與巨觀環境上引導能源結構的低碳轉型。";
             } else {
-                name = "理性減碳先鋒"; 
-                desc = "你具備宏觀的大局觀與理性邏輯。你明白對抗全球氣候災難(SDG 13)需要必要的犧牲，在面對局部生態與全球淨零大局的衝突時，你選擇了承擔眼前的代價。"; 
-                pct = 46; 
-                match = "深海光之守護者";
-                sdg = "實踐 SDG 13 氣候行動：支持與監督具備生態補償機制的乾淨能源政策，從大環境制度上推動低碳減脂轉型。";
+                name = "綠色經濟領航員";
+                desc = "你是一位果斷的技術與轉型先鋒。你深信唯有加速推動工業科技革命、全面電動化與能源結構重組，才能徹底解決氣候災難。你願意承擔轉型初期的局部生態代價。";
+                pct = 17; match = "永續消費實踐者";
+                sdg = "【產業創新與轉型】參與並關注企業永續報告書(ESG)，監督跨國供應鏈的綠色採購方針，推動產業綠色技術與低碳製程的根本變革。";
             }
             
             document.getElementById('res-name').innerText = name;
@@ -321,12 +352,12 @@
             }).then(canvas => {
                 actionButtons.style.opacity = '1';
                 const link = document.createElement('a');
-                link.download = `Ocean_Identity_${document.getElementById('res-name').innerText}.png`;
+                link.download = `Dive_into_Dilemma_${document.getElementById('res-name').innerText}.png`;
                 link.href = canvas.toDataURL('image/png');
                 link.click();
             }).catch(err => {
                 actionButtons.style.opacity = '1';
-                alert("截圖失敗，請直接使用手機截圖！");
+                alert("儲存失敗，請直接使用螢幕截圖！");
             });
         }
     </script>
