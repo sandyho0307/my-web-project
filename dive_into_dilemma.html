@@ -41,24 +41,20 @@
             100% { transform: translate(0,0) scaleX(-1); }
         }
 
-        /* 激烈警報畫面閃爍 (還原上一版最強視覺) */
-        @keyframes alert-flash { 0%, 100% { border-color: rgba(255,255,255,0.1); } 50% { border-color: var(--danger); box-shadow: 0 0 30px var(--danger); } }
-        .emergency { animation: alert-flash 0.5s infinite; }
-
-        /* 潛水艇受損震動 (還原上一版最強視覺) */
+        /* 潛水艇受損震動 (完全還原上一版舒適的震盪體感) */
         @keyframes submarine-shake {
             0%, 100% { transform: translate(0, 0); }
-            20%, 60% { transform: translate(-12px, 7px); }
-            40%, 80% { transform: translate(12px, -7px); }
+            20%, 60% { transform: translate(-8px, 5px); }
+            40%, 80% { transform: translate(8px, -5px); }
         }
-        .shake-active { animation: submarine-shake 0.3s ease-in-out 2; }
+        .shake-active { animation: submarine-shake 0.4s ease-in-out 2; }
 
         .gauge { position: fixed; right: 40px; top: 50%; transform: translateY(-50%); font-size: 3.5rem; font-weight: bold; color: var(--accent); z-index: 1001; text-shadow: 0 0 15px rgba(0,188,212,0.5); text-align: right; }
         .zone-indicator { font-size: 1rem; color: rgba(255,255,255,0.4); letter-spacing: 2px; margin-top: 5px; }
 
         .modal-box {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); display: none; justify-content: center; align-items: center; z-index: 3000;
+            background: rgba(0,0,0,0.92); display: none; justify-content: center; align-items: center; z-index: 3000;
             backdrop-filter: blur(20px);
         }
         .card-inner { background: #0d1117; padding: 45px; border: 2px solid var(--accent); border-radius: 40px; text-align: center; max-width: 600px; box-shadow: 0 0 30px rgba(0,188,212,0.15); transition: border-color 1s ease; }
@@ -142,17 +138,17 @@
         let done = [];
         let damageCount = 0; 
 
-        // 預先在全域宣告生物層分布範圍 (精準對齊 2400px 區塊)
+        // 預先在全域宣告生物層分布範圍 (大幅提升總數至 180 隻以豐富畫面)
         const creaturesData = [
-            { zone: 'light', icons: ['🐬', '🐠', '🐳', '🐢'], minTop: 1500, maxTop: 3800 },
-            { zone: 'twilight', icons: ['🐙', '🦑', '🐡', '🦐'], minTop: 4200, maxTop: 8500 },
-            { zone: 'midnight', icons: ['🦈', '🐡', '🌿', '🐚'], minTop: 8800, maxTop: 11500 }
+            { zone: 'light', icons: ['🐬', '🐠', '🐳', '🐢', '🐟', '🌿'], minTop: 1400, maxTop: 3900 },
+            { zone: 'twilight', icons: ['🐙', '🦑', '🐡', '🦐', '🐠', '🐚'], minTop: 4100, maxTop: 8600 },
+            { zone: 'midnight', icons: ['🦈', '🐡', '🌿', '🐚', '🐙', '🐟'], minTop: 8800, maxTop: 11600 }
         ];
 
-        // 網頁初始化時，在 scroll-area 尚未隱藏前，立刻生成魚群（修復不顯示 Bug）
+        // 優化：每個生態層生成 60 隻，全網頁共高達 180 隻動態生物
         function initBiomedicalLayers() {
             creaturesData.forEach(layer => {
-                for(let i=0; i<30; i++) {
+                for(let i=0; i<60; i++) {
                     let f = document.createElement('div');
                     f.className = 'fish swimming';
                     f.innerText = layer.icons[Math.floor(Math.random() * layer.icons.length)];
@@ -164,7 +160,7 @@
                 }
             });
         }
-        initBiomedicalLayers(); // 確保 DOM 建立時魚群就已經存在
+        initBiomedicalLayers(); // 確保 DOM 建立時魚群立即充斥水族箱
 
         // 體驗開始
         function beginExperience() {
@@ -247,92 +243,4 @@
             
             let finalPrompt = q.p;
             if (idx >= 3 && damageCount >= 2) {
-                finalPrompt = `⚠️【連鎖後果：由於你先前的決策忽視環境，此深海系統已嚴重受損。】 ${q.p}`;
-                document.getElementById('quiz-node').style.borderColor = "var(--danger)";
-            }
-
-            document.getElementById('q-title').innerText = q.t;
-            document.getElementById('q-text').innerText = finalPrompt;
-            const area = document.getElementById('btn-area');
-            area.innerHTML = '';
-
-            [q.a, q.b].forEach((txt, i) => {
-                const b = document.createElement('button');
-                b.className = 'btn-opt';
-                b.innerText = txt;
-                b.onclick = () => {
-                    if (i === 0) {
-                        score -= 10;
-                        damageCount++;
-                        
-                        // 激烈環境惡化累積視覺化
-                        let rotateDeg = damageCount * 45;
-                        let brightnessVal = 50 - (damageCount * 8);
-                        let blurPx = damageCount * 3;
-                        bg.style.filter = `hue-rotate(${rotateDeg}deg) brightness(${brightnessVal}%) blur(${blurPx}px)`;
-                        
-                        // 完全同步上一版最強烈受損震盪效果
-                        document.body.classList.add('shake-active');
-                        frame.classList.add('emergency');
-                        setTimeout(() => document.body.classList.remove('shake-active'), 400);
-
-                        // 開心水族箱：生物受驚嚇依照破壞比例死亡/淡出
-                        let allFish = document.querySelectorAll('.fish');
-                        let killTarget = Math.floor(allFish.length * (damageCount / 5));
-                        allFish.forEach((f, fIdx) => {
-                            if (fIdx < killTarget) {
-                                f.style.transform = `translate(${Math.random()*200 - 100}px, -200px) scale(0)`;
-                                f.style.opacity = '0';
-                            }
-                        });
-                    } else {
-                        score += 10;
-                        frame.classList.remove('emergency');
-                    }
-                    modal.style.display = 'none';
-                    document.body.style.overflow = 'auto';
-                };
-                area.appendChild(b);
-            });
-            modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
-
-        function showFinal() {
-            document.getElementById('final-result').style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-            window.scrollTo(0, 0);
-
-            let name, desc, pct, match, sdg;
-            
-            if (score >= 20) {
-                name = "深海光之守護者";
-                desc = "你堅信生命的絕對價值高於商業進步。在重大的利益權衡前，你甘願放慢轉型效率，也決不讓任何一個物種在你的決策下遭到滅絕。";
-                pct = 24; match = "理性減碳策劃家";
-                sdg = "【永續海洋行動】在日常消費中，主動購買具備 MSC 或 ASC 認證的友善海鮮；減少一次性餐具使用，從消費端直接轉化為抵禦深海污染的防禦力。";
-            } else if (score >= 0 && score < 20) {
-                name = "永續消費實踐者";
-                desc = "你屬於務實的草根行動派。你重視環境價值，並傾向透過日常生活中的綠色消費與公民自律來達成永續，抗拒過於激進或由上而下的法規強制作風。";
-                pct = 31; match = "綠色經濟領航員";
-                sdg = "【責任生產與消費】落實循環經濟，支持參與在地二手社群、淨灘行動，用具體的日常實踐來引導零售產業進行結構性的永續轉型。";
-            } else if (score >= -20 && score < 0) {
-                name = "理性減碳策劃家";
-                desc = "你具備宏觀的大局觀與商管邏輯。你明白對抗全球氣候浩劫(SDG 13)需要必要的權衡。在區域生態與全球淨零大局產生衝突時，你傾向選擇宏觀碳排效益最高的解方。";
-                pct = 28; match = "深海光之守護者";
-                sdg = "【結構性低碳行動】關注並推動具備「生態補償機制」的乾淨能源政策，支持綠色金融，從制度與巨觀環境上引導能源結構的低碳轉型。";
-            } else {
-                name = "綠色經濟領航員";
-                desc = "你是一位果斷的技術與轉型先鋒。你深信唯有加速推動工業科技革命、全面電動化與能源結構重組，才能徹底解決氣候災難。你願意承擔轉型初期的局部生態代價。";
-                pct = 17; match = "永續消費實踐者";
-                sdg = "【產業創新與轉型】參與並關注企業永續報告書(ESG)，監督跨國供應鏈的綠色採購方針，推動產業綠色技術與低碳製程的根本變革。";
-            }
-            
-            document.getElementById('res-name').innerText = name;
-            document.getElementById('res-desc').innerText = desc;
-            document.getElementById('res-pct').innerText = pct;
-            document.getElementById('res-match').innerText = match;
-            document.getElementById('res-sdg').innerText = sdg;
-        }
-    </script>
-</body>
-</html>
+                finalPrompt = `⚠️【連鎖後
