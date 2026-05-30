@@ -7,10 +7,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-        :root { --accent: #00bcd4; }
-        body { margin: 0; background: #000; color: white; font-family: "Microsoft JhengHei", sans-serif; overflow-x: hidden; }
+        :root { --accent: #00bcd4; --danger: #ff4757; }
+        body { margin: 0; background: #000; color: white; font-family: "Microsoft JhengHei", sans-serif; overflow-x: hidden; transition: transform 0.1s ease; }
         
-        /* 啟動遮罩：保證聲音播放 */
+        /* 啟動遮罩 */
         #start-mask {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: radial-gradient(circle, #1a3a5a 0%, #000 100%);
@@ -20,39 +20,50 @@
         #ocean-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(to bottom, #87CEEB 0%, #01579b 40%, #002147 70%, #000 100%);
-            z-index: -2; transition: 1.5s ease;
+            z-index: -2; transition: filter 2s ease;
         }
 
-        /* 視窗框架 */
+        /* 潛水艇視窗 */
         .submersible-window {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             width: 88vw; height: 68vh; border: 4px solid rgba(255,255,255,0.1);
             border-radius: 60px; box-shadow: 0 0 0 2000px rgba(0,0,0,0.7);
-            pointer-events: none; z-index: 1000;
+            pointer-events: none; z-index: 1000; transition: border-color 0.5s ease;
         }
 
-        /* 魚群動畫 (開心水族箱風格) */
-        .fish { position: fixed; font-size: 2.5rem; transition: 1.5s ease; z-index: 10; pointer-events: none; }
+        /* 開心水族箱魚群 */
+        .fish { position: fixed; font-size: 2.5rem; transition: transform 2s ease, opacity 1.5s ease; z-index: 10; pointer-events: none; }
         .swimming { animation: swim 6s infinite alternate ease-in-out; }
         @keyframes swim { from { transform: translate(0,0); } to { transform: translate(60px, 30px); } }
+
+        /* 激烈警報畫面閃爍 */
+        @keyframes alert-flash { 0%, 100% { border-color: rgba(255,255,255,0.1); } 50% { border-color: var(--danger); } }
+        .emergency { animation: alert-flash 1s infinite; }
+
+        /* 潛水艇受損震動 */
+        @keyframes submarine-shake {
+            0%, 100% { transform: translate(0, 0); }
+            20%, 60% { transform: translate(-8px, 5px); }
+            40%, 80% { transform: translate(8px, -5px); }
+        }
+        .shake-active { animation: submarine-shake 0.4s ease-in-out 2; }
 
         .gauge { position: fixed; right: 40px; top: 50%; transform: translateY(-50%); font-size: 3.5rem; font-weight: bold; color: var(--accent); z-index: 1001; text-shadow: 0 0 15px rgba(0,188,212,0.5); }
 
         .modal-box {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); display: none; justify-content: center; align-items: center; z-index: 3000;
-            backdrop-filter: blur(15px);
+            background: rgba(0,0,0,0.95); display: none; justify-content: center; align-items: center; z-index: 3000;
+            backdrop-filter: blur(20px);
         }
-        .card-inner { background: #111; padding: 45px; border: 2px solid var(--accent); border-radius: 40px; text-align: center; max-width: 600px; box-shadow: 0 0 30px rgba(0,188,212,0.2); }
+        .card-inner { background: #111; padding: 45px; border: 2px solid var(--accent); border-radius: 40px; text-align: center; max-width: 600px; box-shadow: 0 0 30px rgba(0,188,212,0.2); transition: border-color 1s ease; }
         .btn-opt { width: 100%; margin-top: 15px; padding: 18px; border: 1px solid rgba(255,255,255,0.3); background: none; color: white; border-radius: 15px; transition: 0.3s; font-weight: bold; }
         .btn-opt:hover { background: white; color: black; transform: scale(1.02); }
 
-        /* 內容高度設定 */
         .content-section { height: 2000px; display: flex; align-items: center; justify-content: center; position: relative; }
         
         #final-result {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #050a12; display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 5000; padding: 20px; overflow-y: auto;
+            background: #060b13; display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 5000; padding: 20px; overflow-y: auto;
         }
         .result-card { background: linear-gradient(135deg, #090d16 0%, #111827 100%); padding: 40px; border-radius: 35px; max-width: 500px; width: 100%; border: 1px solid rgba(255,255,255,0.1); text-align: center; color: white; }
     </style>
@@ -61,20 +72,16 @@
 
     <div id="start-mask" onclick="beginExperience()">
         <h1 class="display-3 fw-bold mb-4">Dive into Dilemma</h1>
-        <p class="h4 text-info mb-5">SDG 14 海洋性格行動實驗</p>
-        <div class="btn btn-info btn-lg rounded-pill px-5 py-3 fw-bold">點擊啟動 (播放海洋音效)</div>
+        <p class="h4 text-info mb-5">SDG 14 海洋性格動態因果實驗室</p>
+        <div class="btn btn-info btn-lg rounded-pill px-5 py-3 fw-bold shadow-lg">啟動實驗 (解鎖網頁音訊)</div>
     </div>
 
-    <audio id="bg-sound" loop preload="auto">
-        <source src="https://www.soundjay.com/nature/ocean-wave-1.mp3" type="audio/mpeg">
-    </audio>
-
     <div id="ocean-bg"></div>
-    <div class="submersible-window"></div>
+    <div class="submersible-window" id="sub-frame"></div>
     <div class="gauge"><span id="m-count">0</span>M</div>
 
     <div id="modal" class="modal-box">
-        <div class="card-inner">
+        <div class="card-inner" id="quiz-node">
             <h6 class="text-info tracking-widest mb-2" id="q-step">REALITY ANALYSIS</h6>
             <h2 id="q-title" class="fw-bold mb-4"></h2>
             <p id="q-text" class="lead opacity-75 mb-5"></p>
@@ -83,11 +90,11 @@
     </div>
 
     <div id="scroll-area" style="height: 12000px; display: none;">
-        <section class="content-section"><h1>潛入海洋...</h1></section>
+        <section class="content-section"><h1>潛入因果海洋...</h1></section>
         <section class="content-section"><h2>陽光層 (200m)</h2></section>
         <section class="content-section"><h2>暮色層 (500m)</h2></section>
         <section class="content-section"><h2>午夜層 (800m)</h2></section>
-        <section class="content-section"><h2>抵達深海底端</h2></section>
+        <section class="content-section"><h2>抵達環境決策臨界底端</h2></section>
     </div>
 
     <div id="final-result">
@@ -114,18 +121,66 @@
     </div>
 
     <script>
-        const sound = document.getElementById('bg-sound');
         const modal = document.getElementById('modal');
         const bg = document.getElementById('ocean-bg');
+        const frame = document.getElementById('sub-frame');
+        const node = document.getElementById('quiz-node');
 
+        let audioCtx, whiteNoise, filterNode;
+        let score = 0;
+        let done = [];
+        let damageCount = 0; // 追蹤玩家選擇了幾次「破壞環境」
+
+        // 【音效終極解決方案】：使用 Web Audio API 現場即時合成海浪白噪音
         function beginExperience() {
             document.getElementById('start-mask').style.display = 'none';
             document.getElementById('scroll-area').style.display = 'block';
             document.body.style.overflow = 'auto';
-            sound.play().catch(e => console.log("音訊被阻擋"));
+
+            try {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                
+                // 1. 建立白噪音緩衝區
+                let bufferSize = 2 * audioCtx.sampleRate;
+                let noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                let output = noiseBuffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    output[i] = Math.random() * 2 - 1;
+                }
+
+                whiteNoise = audioCtx.createBufferSource();
+                whiteNoise.buffer = noiseBuffer;
+                whiteNoise.loop = true;
+
+                // 2. 使用低通濾鏡將白噪音塑造成海浪的悶低音
+                filterNode = audioCtx.createBiquadFilter();
+                filterNode.type = 'lowpass';
+                filterNode.frequency.setValueAtTime(350, audioCtx.currentTime);
+
+                // 3. 建立音量震盪，模擬起伏的海浪聲
+                let gainNode = audioCtx.createGain();
+                gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                
+                // 每 4 秒一個呼吸循環，模擬真實潮汐
+                setInterval(() => {
+                    let now = audioCtx.currentTime;
+                    gainNode.gain.linearRampToValueAtTime(0.25, now + 2);
+                    gainNode.gain.linearRampToValueAtTime(0.08, now + 4);
+                    filterNode.frequency.linearRampToValueAtTime(500, now + 2);
+                    filterNode.frequency.linearRampToValueAtTime(250, now + 4);
+                }, 4000);
+
+                whiteNoise.connect(filterNode);
+                filterNode.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                
+                whiteNoise.start(0);
+            } catch(e) {
+                console.log("瀏覽器音訊核心初始化失敗: ", e);
+            }
         }
 
-        // 生成 100 隻豐富魚群 (開心水族箱風格)
+        // 豐富水族箱魚群群落
         const species = ['🐟', '🐠', '🐡', '🐙', '🐢', '🦐', '🐬', '🐳', '🦈', '🦀', '🌿'];
         for(let i=0; i<100; i++) {
             let f = document.createElement('div');
@@ -133,20 +188,17 @@
             f.innerText = species[Math.floor(Math.random() * species.length)];
             f.style.left = Math.random() * 90 + '%';
             f.style.top = Math.random() * 90 + '%';
-            f.style.opacity = Math.random() * 0.5 + 0.2;
+            f.style.opacity = Math.random() * 0.5 + 0.3;
             document.body.appendChild(f);
         }
 
         const questions = [
-            { d: 200, t: "離岸風電噪音", p: "風電能減碳，但施工噪音傷害鯨豚棲地。你支持立即開工嗎？", a: "支持發展", b: "保育優先" },
-            { d: 400, t: "幽靈漁網代價", p: "清理棄網需耗大量高碳燃料。要出動清理船嗎？", a: "行動清理", b: "維持低碳" },
-            { d: 600, t: "責任消費抉擇", p: "買昂貴的永續標章海鮮，還是便宜的來源不明海鮮？", a: "節省預算", b: "選購認證" },
-            { d: 800, t: "深海採礦爭議", p: "電動車需要深海礦產，但採礦會毀滅海床。支持嗎？", a: "支持開採", b: "嚴格禁止" },
-            { d: 950, t: "塑膠微粒災難", p: "全面禁塑會造成生活巨變。支持立即立法嗎？", a: "穩健轉型", b: "立即禁塑" }
+            { d: 200, t: "離岸風電噪音", p: "風電能大幅度減碳(SDG 13)，但震耳欲聾的施工噪音會震碎白海豚的聽覺，導致迷航滅絕。你的抉擇是？", a: "支持發展：忍受必要代價達成轉型", b: "保育優先：暫緩工程守護珍稀物種" },
+            { d: 400, t: "幽靈漁網代價", p: "海中積累大量廢棄拖網。派遣大型清理船打撈需消耗巨量高碳排燃料。要出動嗎？", a: "權衡現狀：優先維護低碳排大局", b: "立即打撈：不計燃料成本清除致命殺手" },
+            { d: 600, t: "責任消費抉擇", p: "超市裡擺著擁有永續認證但價格高昂的海鮮，以及便宜、來源不明的底拖網海鮮。身為消費者你買？", a: "现实考量：優先節省個人家庭開支", b: "責任消費：堅持高價購買永續認證海鮮" },
+            { d: 800, t: "深海採礦爭議", p: "電動車轉型急需深海稀有金屬，但開採許可將徹底摧毀萬年海床。你是否簽署許可？", a: "同意開採：加速全球電動化減碳革命", b: "嚴格禁止：守護地球最後的荒野地貌" },
+            { d: 950, t: "塑膠微粒災難", p: "全面禁用一次性塑膠將重創零售便利性。你支持立即推動強硬禁令嗎？", a: "穩健轉型：避免經濟劇烈震盪", b: "強硬禁塑：全民即刻承擔生活不便" }
         ];
-
-        let score = 0;
-        let done = [];
 
         window.onscroll = () => {
             let scrollTotal = document.documentElement.scrollHeight - window.innerHeight;
@@ -170,8 +222,18 @@
         function showQ(idx) {
             done.push(idx);
             const q = questions[idx];
+            
+            // 【因果鎖定功能】：如果前面累積了兩次以上的環境破壞行為，最後兩題的敘述會產生「惡化詛咒」
+            let currentPromptText = q.p;
+            if (idx >= 3 && damageCount >= 2) {
+                currentPromptText = `⚠️【警告：由於你先前的決策偏向發展，此區生態已高度脆弱】 ${q.p}`;
+                node.style.borderColor = "var(--danger)";
+            } else {
+                node.style.borderColor = "var(--accent)";
+            }
+
             document.getElementById('q-title').innerText = q.t;
-            document.getElementById('q-text').innerText = q.p;
+            document.getElementById('q-text').innerText = currentPromptText;
             const area = document.getElementById('btn-area');
             area.innerHTML = '';
 
@@ -182,14 +244,34 @@
                 b.onclick = () => {
                     if (i === 0) {
                         score -= 10;
-                        // 選 A 開發：背景變色混濁，魚群全部驚慌隱藏
-                        bg.style.filter = "hue-rotate(90deg) brightness(40%) blur(10px)";
-                        document.querySelectorAll('.fish').forEach(f => f.style.opacity = '0');
+                        damageCount++; // 累積破壞點數
+                        
+                        // 【激烈後果視覺化反應】：
+                        // 1. 背景根據破壞次數，越來越髒、越來越混濁
+                        let rotateDeg = damageCount * 45;
+                        let brightnessVal = 50 - (damageCount * 8);
+                        let blurPx = damageCount * 4;
+                        bg.style.filter = `hue-rotate(${rotateDeg}deg) brightness(${brightnessVal}%) blur(${blurPx}px)`;
+                        
+                        // 2. 潛水艇視窗劇烈搖晃、亮起紅色警報
+                        document.body.classList.add('shake-active');
+                        frame.classList.add('emergency');
+                        setTimeout(() => document.body.classList.remove('shake-active'), 800);
+
+                        // 3. 魚群生物因環境遭到破壞，依比例「死掉/隱藏」
+                        let allFish = document.querySelectorAll('.fish');
+                        let killCount = Math.floor(allFish.length * (damageCount / 5));
+                        allFish.forEach((f, fIdx) => {
+                            if (fIdx < killCount) f.style.opacity = '0';
+                        });
+
                     } else {
                         score += 10;
-                        // 選 B 守護：背景恢復，魚群重新游出來
-                        bg.style.filter = "none";
-                        document.querySelectorAll('.fish').forEach(f => f.style.opacity = '0.4');
+                        // 選擇永續：稍微減輕目前的混濁與警報
+                        frame.classList.remove('emergency');
+                        if (bg.style.filter !== "none") {
+                            bg.style.filter = "brightness(80%)";
+                        }
                     }
                     modal.style.display = 'none';
                     document.body.style.overflow = 'auto';
@@ -207,11 +289,17 @@
 
             let name, desc, pct, match, sdg;
             if (score > 0) {
-                name = "感性生態守護者"; desc = "你堅信生命的價值高於商業利益，守護海洋最純粹的平靜。"; pct = 32; match = "冷靜減碳家";
-                sdg = "實踐 SDG 14：選擇 MSC 永續標章海鮮，減少塑膠使用，給予海洋修復的空間。";
+                name = "深海光之守護者"; 
+                desc = "你堅信生命的絕對價值高於商業進步。在重大的利益考量前，你寧可犧牲轉型效率，也決不讓任何一個物種在你的決策下遭到滅絕。"; 
+                pct = 32; 
+                match = "理性減碳先鋒";
+                sdg = "實踐 SDG 14 永續海洋：在生活中落實責任消費，優先選購具備永續標章（如 MSC/ASC）的水產品，為海洋留下一絲喘息空間。";
             } else {
-                name = "冷靜減碳家"; desc = "你擁有強大的理性思維，明白對抗氣候災難(SDG 13)需要艱難的權衡。"; pct = 46; match = "感性生態守護者";
-                sdg = "實踐 SDG 13：支持能源轉型政策，參與低碳生活的推廣。你的抉擇能推動產業結構化減碳。";
+                name = "理性減碳先鋒"; 
+                desc = "你具備宏觀的大局觀與理性邏輯。你明白對抗全球氣候災難(SDG 13)需要必要的犧牲，在面對局部生態與全球淨零大局的衝突時，你選擇了承擔眼前的代價。"; 
+                pct = 46; 
+                match = "深海光之守護者";
+                sdg = "實踐 SDG 13 氣候行動：支持與監督具備生態補償機制的乾淨能源政策，從大環境制度上推動低碳減脂轉型。";
             }
             
             document.getElementById('res-name').innerText = name;
@@ -221,12 +309,9 @@
             document.getElementById('res-sdg').innerText = sdg;
         }
 
-        // 儲存功能優化：排除按鈕，高解析度下載
         function saveCard() {
             const zone = document.getElementById('capture-zone');
             const actionButtons = zone.querySelector('.d-grid');
-            
-            // 隱藏按鈕避免被拍進去
             actionButtons.style.opacity = '0';
 
             html2canvas(zone, {
@@ -234,14 +319,14 @@
                 scale: 2,
                 useCORS: true
             }).then(canvas => {
-                actionButtons.style.opacity = '1'; // 復原按鈕
+                actionButtons.style.opacity = '1';
                 const link = document.createElement('a');
                 link.download = `Ocean_Identity_${document.getElementById('res-name').innerText}.png`;
                 link.href = canvas.toDataURL('image/png');
                 link.click();
             }).catch(err => {
                 actionButtons.style.opacity = '1';
-                alert("下載失敗，請直接使用手機截圖功能儲存！");
+                alert("截圖失敗，請直接使用手機截圖！");
             });
         }
     </script>
